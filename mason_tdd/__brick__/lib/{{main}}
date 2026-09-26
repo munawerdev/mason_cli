@@ -1,27 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '/config/theme/theme_data.dart';
 import '/injection_container.dart' as di;
 import '/injection_container.dart';
 import '/data/datasources/theme/theme_data_source.dart';
 import '/core/constants/global.dart';
 import '/core/show/checker_navigator_observer.dart';
-import 'package:device_preview/device_preview.dart';
 import '/features/splash/splash_initial_params.dart';
 import '/features/splash/splash_page.dart';
 
 Future<void> main() async {
 //  setCustomSystemUIOverlayStyle();
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  // await dotenv.load(fileName: '.env');
   await di.init();
-  runApp(DevicePreview(
-      enabled: false,
-      builder: (context) {
-        return const MyApp();
-      }));
+    runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -37,16 +31,11 @@ class MyApp extends StatelessWidget {
       builder: (context, state) {
         state as bool;
         return MaterialApp(
-          // useInheritedMediaQuery: true,
-                locale: DevicePreview.locale(context),
-                builder: DevicePreview.appBuilder,
           navigatorKey: GlobalConstants.navigatorKey,
                   scaffoldMessengerKey: GlobalConstants.scaffoldMessengerKey,
                   navigatorObservers: [CheckerNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             theme: state ? darkTheme : lightTheme,
-            // scaffoldMessengerKey: scaffoldMessengerKey,
-        // home: {{class_name}}Page(cubit: getIt(param1: const {{class_name}}InitialParams()))
         home: SplashPage(cubit: getIt(param1: const SplashInitialParams()))
         );
             }));

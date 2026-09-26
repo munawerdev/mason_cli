@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum _ButtonVariant { elevated, outlined, text }
 
@@ -23,11 +23,13 @@ class AppButton extends StatelessWidget {
     this.loadingSize,
     this.tooltip,
     this.semanticLabel,
-  })  : _variant = _ButtonVariant.elevated,
-        borderColor = null,
-        borderWidth = null,
-        assert(text != null || child != null,
-            'Either text or child must be provided');
+  }) : _variant = _ButtonVariant.elevated,
+       borderColor = null,
+       borderWidth = null,
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   const AppButton.outlined({
     super.key,
@@ -48,11 +50,13 @@ class AppButton extends StatelessWidget {
     this.loadingSize,
     this.tooltip,
     this.semanticLabel,
-  })  : _variant = _ButtonVariant.outlined,
-        backgroundColor = null,
-        elevation = null,
-        assert(text != null || child != null,
-            'Either text or child must be provided');
+  }) : _variant = _ButtonVariant.outlined,
+       backgroundColor = null,
+       elevation = null,
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   const AppButton.text({
     super.key,
@@ -71,13 +75,15 @@ class AppButton extends StatelessWidget {
     this.loadingSize,
     this.tooltip,
     this.semanticLabel,
-  })  : _variant = _ButtonVariant.text,
-        backgroundColor = null,
-        elevation = null,
-        borderColor = null,
-        borderWidth = null,
-        assert(text != null || child != null,
-            'Either text or child must be provided');
+  }) : _variant = _ButtonVariant.text,
+       backgroundColor = null,
+       elevation = null,
+       borderColor = null,
+       borderWidth = null,
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   final _ButtonVariant _variant;
   final String? text;
@@ -115,7 +121,7 @@ class AppButton extends StatelessWidget {
       child: switch (_variant) {
         _ButtonVariant.elevated => _buildElevated(context, theme),
         _ButtonVariant.outlined => _buildOutlined(context, theme),
-        _ButtonVariant.text     => _buildText(context, theme),
+        _ButtonVariant.text => _buildText(context, theme),
       },
     );
 
@@ -156,10 +162,12 @@ class AppButton extends StatelessWidget {
             ? WidgetStateProperty.all(foregroundColor)
             : null,
         side: borderColor != null || borderWidth != null
-            ? WidgetStateProperty.all(BorderSide(
-                color: borderColor ?? theme.colorScheme.primary,
-                width: borderWidth ?? 1.0,
-              ))
+            ? WidgetStateProperty.all(
+                BorderSide(
+                  color: borderColor ?? theme.colorScheme.primary,
+                  width: borderWidth ?? 1.0,
+                ),
+              )
             : null,
       ),
       onPressed: _isDisabled ? null : onPressed,

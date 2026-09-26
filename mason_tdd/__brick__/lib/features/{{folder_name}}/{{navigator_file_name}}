@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '{{initial_params_file_name}}';
 import '{{page_file_name}}';
 import '/config/navigation/app_navigator.dart';

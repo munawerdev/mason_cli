@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Simple configuration class for AppTextFormField overrides
 class AppTextFieldConfig {
@@ -179,10 +179,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     final focusedBorder = inputTheme.focusedBorder as OutlineInputBorder?;
 
     // Apply overrides if provided
-    Color? borderColor = widget.borderColor ?? widget.config?.borderColor;
-    Color? focusedBorderColor =
+    final Color? borderColor = widget.borderColor ?? widget.config?.borderColor;
+    final Color? focusedBorderColor =
         widget.focusedBorderColor ?? widget.config?.focusedBorderColor;
-    Color? fillColor = widget.fillColor ?? widget.config?.fillColor;
+    final Color? fillColor = widget.fillColor ?? widget.config?.fillColor;
 
     return InputDecoration(
       labelText: widget.labelText,

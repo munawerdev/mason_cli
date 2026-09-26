@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Lightweight config for quick actions in the custom app bar.
 class AppBarAction {

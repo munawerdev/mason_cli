@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Configuration class for AppCachedNetworkImage styling and behavior
 class AppImageConfig {

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable paginated list view widget that handles infinite scrolling
 /// and loading more functionality automatically.

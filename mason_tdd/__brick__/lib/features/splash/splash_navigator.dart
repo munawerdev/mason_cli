@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '/features/{{folder_name}}/{{folder_name}}_navigator.dart';
 import '/features/splash/splash_page.dart';
 import '/features/auth/login/login_navigator.dart';

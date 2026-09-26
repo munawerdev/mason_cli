@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'bottom_nav_cubit.dart';
 
@@ -44,7 +44,7 @@ class _BottomNavState extends State<BottomNavPage> {
           builder: (context) => ExitAppDialog(
             text: 'Are you sure you want to exit the app?',
             label: 'Exit App',
-            onPressed: () => SystemNavigator.pop(),
+            onPressed: SystemNavigator.pop,
           ),
         );
 

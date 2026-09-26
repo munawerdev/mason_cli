@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'bottom_nav_initial_params.dart';
-import 'bottom_nav_page.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '/config/navigation/app_navigator.dart';
 import '/injection_container.dart';
+import 'bottom_nav_initial_params.dart';
+import 'bottom_nav_page.dart';
 
 class BottomNavNavigator {
   BottomNavNavigator(this.navigator);
@@ -13,13 +14,12 @@ class BottomNavNavigator {
 }
 
 mixin BottomNavRoute {
-void openBottomNav(BottomNavInitialParams initialParams) =>
-navigator.push(
-context: context,
-        routeName: BottomNavPage(cubit: getIt(param1: initialParams))
-);
+  void openBottomNav(BottomNavInitialParams initialParams) => navigator.push(
+    context: context,
+    routeName: BottomNavPage(cubit: getIt(param1: initialParams)),
+  );
 
-AppNavigator get navigator;
+  AppNavigator get navigator;
 
-BuildContext get context;
+  BuildContext get context;
 }

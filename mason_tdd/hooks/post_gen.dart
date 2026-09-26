@@ -65,29 +65,31 @@ Future<void> run(HookContext context) async {
     'fpdart',
     'shimmer',
     'cached_network_image',
-    'flutter_dotenv',
-    'logger',
-    'image_picker',
-    'permission_handler',
-    'package_info_plus',
-    'in_app_update',
-    'in_app_review',
-    'url_launcher',
+    // 'flutter_dotenv',
+    // 'logger',
+    // 'image_picker',
+    // 'permission_handler',
+    // 'package_info_plus',
+    // 'in_app_update',
+    // 'in_app_review',
+    // 'url_launcher',
+    'material_ui',
+    'cupertino_ui'
   ];
 
-  final devDependencies = [
-    'device_preview',
-  ];
+  // final devDependencies = [
+  //   'device_preview',
+  // ];
 
   final missingDeps =
       dependencies.where((p) => !isPackageInPubspec(p)).toList();
-  final missingDevDeps =
-      devDependencies.where((p) => !isPackageInPubspec(p)).toList();
+  // final missingDevDeps =
+  //     devDependencies.where((p) => !isPackageInPubspec(p)).toList();
 
   context.logger.info('🔧 Adding dependencies...');
 
   await _addPackages(missingDeps);
-  await _addPackages(missingDevDeps, dev: true);
+  // await _addPackages(missingDevDeps, dev: true);
 
   // Run flutter pub get once after all dependencies are added
   if (!await _runCommand('flutter', ['pub', 'get'])) {
@@ -116,7 +118,12 @@ BASE_URL=https://example.com
     envFile.writeAsStringSync(envContent);
   }
 
-  // Set up Android permissions for storage and internet
+  // ---------------------------------------------------------------------------
+  // ANDROID PERMISSIONS
+  // ---------------------------------------------------------------------------
+  // Set up Android INTERNET permission (only one enabled for now).
+  // Other permissions (storage, camera, etc.) are commented out below –
+  // enable them when you actually add image_picker / permission_handler.
   final androidManifestPath = 'android/app/src/main/AndroidManifest.xml';
   final androidManifest = File(androidManifestPath);
 
@@ -124,17 +131,18 @@ BASE_URL=https://example.com
     final manifestContent = androidManifest.readAsStringSync();
 
     // Check if permissions already exist
-    final hasStoragePermission =
-        manifestContent.contains('android.permission.READ_EXTERNAL_STORAGE');
-    final hasWritePermission =
-        manifestContent.contains('android.permission.WRITE_EXTERNAL_STORAGE');
+    // final hasStoragePermission =
+    //     manifestContent.contains('android.permission.READ_EXTERNAL_STORAGE');
+    // final hasWritePermission =
+    //     manifestContent.contains('android.permission.WRITE_EXTERNAL_STORAGE');
     final hasInternetPermission =
         manifestContent.contains('android.permission.INTERNET');
 
-    if (!hasStoragePermission ||
-        !hasWritePermission ||
-        !hasInternetPermission) {
-      // Find the manifest tag and add permissions before it
+    // if (!hasStoragePermission ||
+    //     !hasWritePermission ||
+    //     !hasInternetPermission) {
+    if (!hasInternetPermission) {
+      // Find the manifest tag and add permissions after it
       final lines = manifestContent.split('\n');
       final newLines = <String>[];
       bool manifestFound = false;
@@ -146,15 +154,15 @@ BASE_URL=https://example.com
         if (line.trim().startsWith('<manifest') && !manifestFound) {
           manifestFound = true;
 
-          if (!hasStoragePermission) {
-            newLines.add(
-                '    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />');
-          }
+          // if (!hasStoragePermission) {
+          //   newLines.add(
+          //       '    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />');
+          // }
 
-          if (!hasWritePermission) {
-            newLines.add(
-                '    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />');
-          }
+          // if (!hasWritePermission) {
+          //   newLines.add(
+          //       '    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />');
+          // }
 
           if (!hasInternetPermission) {
             newLines.add(
@@ -167,46 +175,50 @@ BASE_URL=https://example.com
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // iOS PERMISSIONS  (commented out – enable when needed)
+  // ---------------------------------------------------------------------------
   // Set up iOS permissions for photo library access
-  final iosInfoPlistPath = 'ios/Runner/Info.plist';
-  final iosInfoPlist = File(iosInfoPlistPath);
-
-  if (iosInfoPlist.existsSync()) {
-    final plistContent = iosInfoPlist.readAsStringSync();
-
-    // Check if permissions already exist
-    final hasPhotoLibraryUsageDescription =
-        plistContent.contains('NSPhotoLibraryUsageDescription');
-
-    if (!hasPhotoLibraryUsageDescription) {
-      // Find the dict tag and add permissions before the closing dict
-      final lines = plistContent.split('\n');
-      final newLines = <String>[];
-      bool dictFound = false;
-      int dictLevel = 0;
-
-      for (final line in lines) {
-        if (line.trim().startsWith('<dict>')) {
-          dictLevel++;
-          if (dictLevel == 1) dictFound = true;
-        } else if (line.trim().startsWith('</dict>')) {
-          dictLevel--;
-
-          // Add permissions before the main dict closes
-          if (dictLevel == 0 && dictFound) {
-            if (!hasPhotoLibraryUsageDescription) {
-              newLines.add('	<key>NSPhotoLibraryUsageDescription</key>');
-              newLines.add(
-                  '	<string>This app needs photo library access to select images</string>');
-            }
-          }
-        }
-        newLines.add(line);
-      }
-
-      iosInfoPlist.writeAsStringSync(newLines.join('\n'));
-    }
-  }
+  //
+  // final iosInfoPlistPath = 'ios/Runner/Info.plist';
+  // final iosInfoPlist = File(iosInfoPlistPath);
+  //
+  // if (iosInfoPlist.existsSync()) {
+  //   final plistContent = iosInfoPlist.readAsStringSync();
+  //
+  //   // Check if permissions already exist
+  //   final hasPhotoLibraryUsageDescription =
+  //       plistContent.contains('NSPhotoLibraryUsageDescription');
+  //
+  //   if (!hasPhotoLibraryUsageDescription) {
+  //     // Find the dict tag and add permissions before the closing dict
+  //     final lines = plistContent.split('\n');
+  //     final newLines = <String>[];
+  //     bool dictFound = false;
+  //     int dictLevel = 0;
+  //
+  //     for (final line in lines) {
+  //       if (line.trim().startsWith('<dict>')) {
+  //         dictLevel++;
+  //         if (dictLevel == 1) dictFound = true;
+  //       } else if (line.trim().startsWith('</dict>')) {
+  //         dictLevel--;
+  //
+  //         // Add permissions before the main dict closes
+  //         if (dictLevel == 0 && dictFound) {
+  //           if (!hasPhotoLibraryUsageDescription) {
+  //             newLines.add('	<key>NSPhotoLibraryUsageDescription</key>');
+  //             newLines.add(
+  //                 '	<string>This app needs photo library access to select images</string>');
+  //           }
+  //         }
+  //       }
+  //       newLines.add(line);
+  //     }
+  //
+  //     iosInfoPlist.writeAsStringSync(newLines.join('\n'));
+  //   }
+  // }
 
   // Ensure .env is included in pubspec.yaml assets
   final pubspecLines = pubspec.readAsLinesSync();
