@@ -18,8 +18,8 @@ class {{class_name}}Cubit extends Cubit<{{class_name}}State> {
       this.navigator)
    : super({{class_name}}State.initial(initialParams:initialParams));
 
-Future<void> {{folder_name_camelCase}}({bool? showLoading = false}) async {
-  if (showLoading!) {
+Future<void> {{folder_name_camelCase}}({bool showLoading = false}) async {
+  if (showLoading) {
     emit(state.copyWith(response: ApiResponse.loading()));
   }
     final {{folder_name_camelCase}} = await networkRepository.get<Map<String, dynamic>>(url: AppUrl.{{folder_name_camelCase}});
