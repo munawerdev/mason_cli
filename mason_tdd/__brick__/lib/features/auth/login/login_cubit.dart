@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/core/show/show/show.dart';
+import '/core/show/show.dart';
 import '/core/utils/app_url.dart';
 import '/data/models/auth/login_model.dart';
 import '/domain/repositories/network/network_base_api_service.dart';

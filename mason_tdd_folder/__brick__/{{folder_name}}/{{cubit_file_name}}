@@ -38,7 +38,7 @@ import '{{state_file_name}}';
 import '/data/models/{{folder_name}}_model.dart';
 import '/domain/repositories/network/network_base_api_service.dart';
 import '/core/utils/app_url.dart';
-import '/core/show/show/show.dart';
+import '/core/show/show.dart';
 
 class {{class_name}}Cubit extends Cubit<{{class_name}}State> {
   final NetworkBaseApiService networkRepository;
