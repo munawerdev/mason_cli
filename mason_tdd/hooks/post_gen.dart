@@ -74,7 +74,8 @@ Future<void> run(HookContext context) async {
     // 'in_app_review',
     // 'url_launcher',
     'material_ui',
-    'cupertino_ui'
+    'cupertino_ui',
+    'go_router'
   ];
 
   // final devDependencies = [

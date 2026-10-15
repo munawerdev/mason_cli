@@ -5,7 +5,7 @@ import 'splash_cubit.dart';
 class SplashPage extends StatefulWidget {
   final SplashCubit cubit;
 
-  const SplashPage({Key? key, required this.cubit}) : super(key: key);
+  const SplashPage({super.key, required this.cubit});
 
   @override
   State<SplashPage> createState() => _SplashState();
@@ -17,7 +17,6 @@ class _SplashState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    cubit.navigator.context = context;
     cubit.checkUser();
   }
 

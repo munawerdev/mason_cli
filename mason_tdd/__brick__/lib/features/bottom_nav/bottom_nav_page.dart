@@ -15,11 +15,6 @@ class BottomNavPage extends StatefulWidget {
 class _BottomNavState extends State<BottomNavPage> {
   BottomNavCubit get cubit => widget.cubit;
 
-  @override
-  void initState() {
-    super.initState();
-    cubit.navigator.context = context;
-  }
 
   @override
   void dispose() {

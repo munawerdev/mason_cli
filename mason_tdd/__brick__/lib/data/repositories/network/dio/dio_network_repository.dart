@@ -156,7 +156,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
         if (data != null) ...data,
       });
 
-      return _executeRequest<T>(
+      return await _executeRequest<T>(
         () => _dio.post(
           url,
           data: formData,

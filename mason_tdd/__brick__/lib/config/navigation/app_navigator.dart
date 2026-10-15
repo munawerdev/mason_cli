@@ -1,76 +1,62 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:go_router/go_router.dart';
 
-import 'transition_type.dart';
-import 'transition_type_checker.dart';
+import 'app_router.dart';
 
-class AppNavigator with TransitionTypeChecker {
-  Future<dynamic> push({
-    required BuildContext context,
-    required Widget routeName,
-    TransitionType transitionType = TransitionType.slideFromRight,
-  }) =>
-      Navigator.of(context)
-          .push(transitionTypeChecker(routeName, transitionType));
+class AppNavigator {
+  AppNavigator({GoRouter? router}) : _router = router ?? AppRouter.router;
 
-  String restorablePush({
-    required BuildContext context,
-    required Widget routeName,
-    TransitionType transitionType = TransitionType.slideFromRight,
-  }) {
-    return Navigator.of(context)
-        .restorablePush((BuildContext context, Object? arguments) {
-          return transitionTypeChecker(routeName, transitionType);
-        });
-  }
+  final GoRouter _router;
 
-  Future<Object?> pushNamed({
-    required BuildContext context,
-    required String routeName,
-    Object? arguments,
-  }) => Navigator.of(context).pushNamed(routeName, arguments: arguments);
+  void go(String location, {Object? extra}) =>
+      _router.go(location, extra: extra);
 
-  Future<dynamic> pushReplacement({
-    required BuildContext context,
-    required Widget routeName,
-    TransitionType transitionType = TransitionType.slideFromRight,
-  }) =>
-      Navigator.of(context)
-          .pushReplacement(transitionTypeChecker(routeName, transitionType));
-
-  Future<Object?> pushReplacementNamed({
-    required BuildContext context,
-    required String routeName,
-    Object? arguments,
-  }) =>
-      Navigator.of(context)
-          .pushReplacementNamed(routeName, arguments: arguments);
-
-  Future<dynamic> pushAndRemoveUntil({
-    required BuildContext context,
-    required Widget routeName,
-    required RoutePredicate predicate,
-    TransitionType transitionType = TransitionType.slideFromRight,
-  }) => Navigator.of(context).pushAndRemoveUntil(
-    transitionTypeChecker(routeName, transitionType),
-    predicate,
+  void goNamed(
+    String name, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, dynamic> queryParameters = const <String, dynamic>{},
+    Object? extra,
+  }) => _router.goNamed(
+    name,
+    pathParameters: pathParameters,
+    queryParameters: queryParameters,
+    extra: extra,
   );
 
-  Future<Object?> pushNamedAndRemoveUntil({
-    required BuildContext context,
-    required String routeName,
-    required RoutePredicate predicate,
-    Object? arguments,
-  }) =>
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(routeName, predicate, arguments: arguments);
+  Future<T?> push<T>(String location, {Object? extra}) =>
+      _router.push<T>(location, extra: extra);
 
-  void pop(BuildContext context, [Object? result]) =>
-      Navigator.of(context).pop(result);
+  Future<T?> pushNamed<T>(
+    String name, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, dynamic> queryParameters = const <String, dynamic>{},
+    Object? extra,
+  }) => _router.pushNamed<T>(
+    name,
+    pathParameters: pathParameters,
+    queryParameters: queryParameters,
+    extra: extra,
+  );
 
-  bool canPop(BuildContext context) => Navigator.of(context).canPop();
+  void pushReplacement(String location, {Object? extra}) =>
+      _router.pushReplacement(location, extra: extra);
 
-  void popUntil({
-    required BuildContext context,
-    required RoutePredicate predicate,
-  }) => Navigator.of(context).popUntil(predicate);
+  void pushReplacementNamed(
+    String name, {
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, dynamic> queryParameters = const <String, dynamic>{},
+    Object? extra,
+  }) => _router.pushReplacementNamed(
+    name,
+    pathParameters: pathParameters,
+    queryParameters: queryParameters,
+    extra: extra,
+  );
+
+  void pop<T>([T? result]) {
+    if (canPop) {
+      _router.pop<T>(result);
+    }
+  }
+
+  bool get canPop => _router.canPop();
 }
