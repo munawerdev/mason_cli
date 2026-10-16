@@ -1,25 +1,18 @@
-import 'package:material_ui/material_ui.dart';
-import '{{initial_params_file_name}}';
-import '{{page_file_name}}';
 import '/config/navigation/app_navigator.dart';
-import '/injection_container.dart';
+import '/config/navigation/app_routes.dart';
+import '{{initial_params_file_name}}';
 
 class {{class_name}}Navigator {
   {{class_name}}Navigator(this.navigator);
+ 
   @override
-  late BuildContext context;
-  @override
-  AppNavigator navigator;
+  final AppNavigator navigator;
 }
 
 mixin {{class_name}}Route {
 void open{{class_name}}({{class_name}}InitialParams initialParams) =>
-navigator.push(
-context: context,
-        routeName: {{class_name}}Page(cubit: getIt(param1: initialParams))
-);
+  navigator.go(AppRoutes.{{folder_name_camelCase}}, extra: initialParams);
 
 AppNavigator get navigator;
 
-BuildContext get context;
 }

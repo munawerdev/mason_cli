@@ -252,6 +252,168 @@ import 'features/${originalName.snakeCase}/${originalName.snakeCase}_initial_par
     appUrl(urlContent);
   }
 
+  // ---------------------------------------------------------------------------
+  // ROUTE REGISTRATION (GoRouter)
+  // ---------------------------------------------------------------------------
+  // The generated `<name>_navigator.dart` navigates with
+  // `navigator.go(AppRoutes.<name>, extra: initialParams)`, so the route has to
+  // exist in `app_routes.dart` and a matching `GoRoute` in `app_router.dart`.
+
+  /// Inserts [importStatement] into the import block of [filePath], keeping the
+  /// project imports (the ones starting with `/`) sorted alphabetically.
+  void addImportToFile(String importStatement, String filePath) {
+    File file = File(filePath);
+    if (!file.existsSync()) {
+      context.logger.warn('⚠️  $filePath not found. Skipping import setup.');
+      return;
+    }
+
+    final lines = file.readAsLinesSync();
+    if (lines.any((line) => line.trim() == importStatement)) return;
+
+    final importPattern = RegExp('^import\\s+[\'"]([^\'"]+)[\'"];');
+    int? insertIndex;
+    int? lastProjectImportIndex;
+    int? lastImportIndex;
+
+    for (int i = 0; i < lines.length; i++) {
+      final match = importPattern.firstMatch(lines[i].trim());
+      if (match == null) continue;
+      lastImportIndex = i;
+
+      // Only reorder within the project imports group so that `dart:` and
+      // `package:` imports stay where they are.
+      if (!(match.group(1) ?? '').startsWith('/')) continue;
+      lastProjectImportIndex = i;
+
+      if (insertIndex == null &&
+          lines[i].trim().compareTo(importStatement) > 0) {
+        insertIndex = i;
+      }
+    }
+
+    final anchor = lastProjectImportIndex ?? lastImportIndex;
+    if (anchor == null) {
+      context.logger.warn('⚠️  Could not find import block in $filePath');
+      return;
+    }
+
+    lines.insert(insertIndex ?? anchor + 1, importStatement);
+    file.writeAsStringSync(lines.join('\n'));
+  }
+
+  /// Adds `static const String <name> = '/<name>';` to `AppRoutes`.
+  void addRouteToAppRoutes() {
+    const filePath = 'lib/config/navigation/app_routes.dart';
+    File file = File(filePath);
+    if (!file.existsSync()) {
+      context.logger.warn(
+          '⚠️  $filePath not found. Skipping AppRoutes registration.');
+      return;
+    }
+
+    final fileContent = file.readAsStringSync();
+    final routeName = originalName.camelCase;
+
+    if (fileContent.contains('static const String $routeName =')) return;
+
+    final closingBraceIndex = fileContent.lastIndexOf('}');
+    if (closingBraceIndex == -1) {
+      context.logger.warn('⚠️  Could not find AppRoutes class in $filePath');
+      return;
+    }
+
+    final start = fileContent.substring(0, closingBraceIndex);
+    final end = fileContent.substring(closingBraceIndex);
+    final entry =
+        "  static const String $routeName = '/${originalName.snakeCase}';\n";
+
+    file.writeAsStringSync('$start$entry$end');
+  }
+
+  /// Adds the `GoRoute` for the generated page to `AppRouter`.
+  void addRouteToAppRouter() {
+    const filePath = 'lib/config/navigation/app_router.dart';
+    File file = File(filePath);
+    if (!file.existsSync()) {
+      context.logger.warn(
+          '⚠️  $filePath not found. Skipping GoRouter registration.');
+      return;
+    }
+
+    final routeName = originalName.camelCase;
+    final folder = originalName.snakeCase;
+
+    if (file.readAsStringSync().contains('AppRoutes.$routeName')) return;
+
+    addImportToFile(
+        "import '/features/$folder/${folder}_initial_params.dart';", filePath);
+    addImportToFile("import '/features/$folder/${folder}_page.dart';", filePath);
+
+    final fileContent = file.readAsStringSync();
+
+    // Locate the `routes: [...]` list and find its matching closing bracket.
+    final routesIndex = fileContent.indexOf('routes:');
+    final listStart =
+        routesIndex == -1 ? -1 : fileContent.indexOf('[', routesIndex);
+
+    int? listEnd;
+    if (listStart != -1) {
+      int depth = 0;
+      bool inString = false;
+      String quote = '';
+      for (int i = listStart; i < fileContent.length; i++) {
+        final char = fileContent[i];
+        if (inString) {
+          if (char == r'\') {
+            i++;
+            continue;
+          }
+          if (char == quote) inString = false;
+          continue;
+        }
+        if (char == "'" || char == '"') {
+          inString = true;
+          quote = char;
+          continue;
+        }
+        if (char == '[') {
+          depth++;
+        } else if (char == ']') {
+          depth--;
+          if (depth == 0) {
+            listEnd = i;
+            break;
+          }
+        }
+      }
+    }
+
+    if (listEnd == null) {
+      context.logger
+          .warn('⚠️  Could not find routes list in $filePath. Skipping.');
+      return;
+    }
+
+    final lineStart = fileContent.lastIndexOf('\n', listEnd) + 1;
+    final routeEntry = '''      GoRoute(
+        path: AppRoutes.$routeName,
+        builder: (context, state) => ${name}Page(
+          cubit: getIt(param1: state.extra as ${name}InitialParams),
+        ),
+      ),
+''';
+
+    final updatedContent = '${fileContent.substring(0, lineStart)}'
+        '$routeEntry'
+        '${fileContent.substring(lineStart)}';
+
+    file.writeAsStringSync(updatedContent);
+  }
+
+  addRouteToAppRoutes();
+  addRouteToAppRouter();
+
   // Display completion message
   context.logger.info('🎉 Feature "$name" generated successfully!');
 

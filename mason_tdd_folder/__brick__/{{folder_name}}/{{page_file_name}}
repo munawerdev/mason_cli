@@ -22,11 +22,6 @@ class _{{class_name}}State extends State<{{class_name}}Page> {
 {{class_name}}Cubit get cubit => widget.cubit;
 
   @override
-  void initState() {
-    super.initState();
-    cubit.navigator.context = context;
-  }
-  @override
   void dispose() {
     cubit.close();
     super.dispose();

@@ -19,6 +19,7 @@ mason make mason_tdd
 - ✅ Flutter Bloc/Cubit state management
 - ✅ Repository pattern with API support
 - ✅ GET/POST API endpoints
+- ✅ Automatic GoRouter registration in `app_router.dart` + `app_routes.dart`
 
 ## 🚀 Quick Start
 
