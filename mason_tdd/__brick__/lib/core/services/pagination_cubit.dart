@@ -53,7 +53,7 @@ mixin PaginationMixin<S> on Cubit<S> {
     try {
       final response = await fetchData(getCurrentCount(currentData), limit);
 
-      if (response.status == Status.COMPLETED) {
+      if (response.status == Status.completed) {
         final mergedData = mergeData(currentData, response.data);
         emit(
           currentState.copyWith(

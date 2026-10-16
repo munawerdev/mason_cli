@@ -67,9 +67,9 @@ class StatusSwitcher<T> extends StatelessWidget {
 
   Widget _buildStatusWidget(BuildContext context) {
     switch (response.status) {
-      case Status.LOADING:
+      case Status.loading:
         return onLoading?.call(context) ?? _DefaultLoadingWidget();
-      case Status.ERROR:
+      case Status.error:
         return onError?.call(context, response.error) ??
             _DefaultErrorWidget(
               failure: response.error,
@@ -77,7 +77,7 @@ class StatusSwitcher<T> extends StatelessWidget {
               config: config,
               customTitle: customErrorTitle,
             );
-      case Status.COMPLETED:
+      case Status.completed:
         if (_isDataEmpty(response.data)) {
           return _DefaultNoDataWidget(
             config: config,
@@ -105,7 +105,7 @@ class StatusSwitcher<T> extends StatelessWidget {
 class _DefaultLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      Center(child: CircularProgressIndicator.adaptive());
+      const Center(child: CircularProgressIndicator.adaptive());
 }
 
 /// Professional error widget with better UX
@@ -224,7 +224,7 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
     decoration: BoxDecoration(
       color: errorColor.withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(20.r),
-      border: Border.all(color: errorColor.withValues(alpha: 0.3), width: 1),
+      border: Border.all(color: errorColor.withValues(alpha: 0.3)),
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -253,7 +253,6 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: context.theme.colorScheme.primary.withValues(alpha: 0.3),
-            width: 1,
           ),
         ),
         child: Text(

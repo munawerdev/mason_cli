@@ -40,7 +40,6 @@ class AppColors {
   // Color Scheme
   static ColorScheme lightColorScheme = ColorScheme.fromSeed(
     seedColor: primary,
-    brightness: Brightness.light,
     primary: primary,
     // onPrimary: onPrimary,
     // primaryContainer: primaryVariant,

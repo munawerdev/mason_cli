@@ -9,11 +9,11 @@ class ApiResponse<T> {
 
   ApiResponse(this.status, this.data, this.error);
 
-  ApiResponse.initial(this.initial) : status = Status.INITIAL;
+  ApiResponse.initial(this.initial) : status = Status.initial;
 
-  ApiResponse.loading() : status = Status.LOADING;
+  ApiResponse.loading() : status = Status.loading;
 
-  ApiResponse.completed(this.data) : status = Status.COMPLETED;
+  ApiResponse.completed(this.data) : status = Status.completed;
 
-  ApiResponse.error(this.error) : status = Status.ERROR;
+  ApiResponse.error(this.error) : status = Status.error;
 }

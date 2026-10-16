@@ -180,7 +180,7 @@ ThemeData get lightTheme => ThemeData(
   ),
 
   // Bottom Navigation Bar Theme
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
     elevation: 8,
   ),
