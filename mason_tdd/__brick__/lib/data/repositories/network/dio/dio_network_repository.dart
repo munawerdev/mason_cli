@@ -9,21 +9,16 @@ import '/domain/repositories/network/network_base_api_service.dart';
 import 'dio_config.dart';
 
 class DioNetworkRepository implements NetworkBaseApiService {
-  final UserDataSources _userDataSources;
-  final LocalStorageBaseApiService _localStorageRepository;
-  final ApiErrorHandler _apiErrorHandler;
-  late final Dio _dio;
-
-  DioNetworkRepository(
-    this._userDataSources,
-    this._localStorageRepository,
-    this._apiErrorHandler,
-  ) {
+  DioNetworkRepository(this._userDataSources, this._localStorageRepository, this._apiErrorHandler) {
     _dio = DioConfig.createDio(
       userDataSources: _userDataSources,
       localStorageRepository: _localStorageRepository,
     );
   }
+  final UserDataSources _userDataSources;
+  final LocalStorageBaseApiService _localStorageRepository;
+  final ApiErrorHandler _apiErrorHandler;
+  late final Dio _dio;
 
   @override
   Future<Either<NetworkFailure, T>> get<T>({
@@ -61,9 +56,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData
-              ? Headers.multipartFormDataContentType
-              : Headers.jsonContentType,
+          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
         ),
       ),
     );
@@ -88,9 +81,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData
-              ? Headers.multipartFormDataContentType
-              : Headers.jsonContentType,
+          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
         ),
       ),
     );
@@ -115,9 +106,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData
-              ? Headers.multipartFormDataContentType
-              : Headers.jsonContentType,
+          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
         ),
       ),
     );
@@ -151,7 +140,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
     CancelToken? cancelToken,
   }) async {
     try {
-      final formData = FormData.fromMap({
+      final FormData formData = FormData.fromMap(<String, dynamic>{
         'file': await MultipartFile.fromFile(filePath, filename: fileName),
         if (data != null) ...data,
       });
@@ -166,31 +155,21 @@ class DioNetworkRepository implements NetworkBaseApiService {
         ),
       );
     } catch (e) {
-      return left(
-        NetworkFailure(
-          error: 'File upload preparation failed: $e',
-          type: NetworkFailureType.unknown,
-        ),
-      );
+      return left(NetworkFailure(error: 'File upload preparation failed: $e'));
     }
   }
 
   /// Common method to execute requests and handle errors
   Future<Either<NetworkFailure, T>> _executeRequest<T>(
-    Future<Response> Function() request,
+    Future<Response<T>> Function() request,
   ) async {
     try {
-      final response = await request();
-      return right(response.data);
+      final Response<dynamic> response = await request();
+      return right(response.data as T);
     } on DioException catch (e) {
       return left(_apiErrorHandler.handleDioError(e));
     } catch (e) {
-      return left(
-        NetworkFailure(
-          error: 'Unexpected error: $e',
-          type: NetworkFailureType.unknown,
-        ),
-      );
+      return left(NetworkFailure(error: 'Unexpected error: $e'));
     }
   }
 }

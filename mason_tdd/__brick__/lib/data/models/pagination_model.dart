@@ -7,6 +7,16 @@ class Pagination {
     required this.totalPages,
   });
 
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      page: json['page'] as int ?? 0,
+      limit: json['limit'] as int ?? 0,
+      currentRecords: json['currentRecords'] as int ?? 0,
+      totalRecords: json['totalRecords'] as int ?? 0,
+      totalPages: json['totalPages'] as int ?? 0,
+    );
+  }
+
   final int page;
   final int limit;
   final int currentRecords;
@@ -26,16 +36,6 @@ class Pagination {
       currentRecords: currentRecords ?? this.currentRecords,
       totalRecords: totalRecords ?? this.totalRecords,
       totalPages: totalPages ?? this.totalPages,
-    );
-  }
-
-  factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(
-      page: json["page"] ?? 0,
-      limit: json["limit"] ?? 0,
-      currentRecords: json["currentRecords"] ?? 0,
-      totalRecords: json["totalRecords"] ?? 0,
-      totalPages: json["totalPages"] ?? 0,
     );
   }
 }

@@ -37,13 +37,12 @@ mixin PaginationMixin<S> on Cubit<S> {
     int limit = 10,
   }) async {
     // Get current state and data
-    final currentState = state as dynamic;
-    final currentData = currentState.response.data as TData;
-    final isLoadingMore = currentState.isLoadingMore as bool;
+    final dynamic currentState = state as dynamic;
+    final TData currentData = currentState.response.data as TData;
+    final bool isLoadingMore = currentState.isLoadingMore as bool;
 
     // Early return if loading or no more data
-    if (isLoadingMore ||
-        getCurrentCount(currentData) >= getTotalCount(currentData)) {
+    if (isLoadingMore || getCurrentCount(currentData) >= getTotalCount(currentData)) {
       return;
     }
 
@@ -51,15 +50,12 @@ mixin PaginationMixin<S> on Cubit<S> {
     emit(currentState.copyWith(isLoadingMore: true));
 
     try {
-      final response = await fetchData(getCurrentCount(currentData), limit);
+      final ApiResponse<TData> response = await fetchData(getCurrentCount(currentData), limit);
 
       if (response.status == Status.completed) {
-        final mergedData = mergeData(currentData, response.data);
+        final TData mergedData = mergeData(currentData, response.data);
         emit(
-          currentState.copyWith(
-            response: ApiResponse.completed(mergedData),
-            isLoadingMore: false,
-          ),
+          currentState.copyWith(response: ApiResponse.completed(mergedData), isLoadingMore: false),
         );
       } else {
         emit(currentState.copyWith(isLoadingMore: false));
