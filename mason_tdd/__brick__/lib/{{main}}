@@ -10,7 +10,7 @@ import '/injection_container.dart' as di;
 import '/injection_container.dart';
 
 Future<void> main() async {
-//  setCustomSystemUIOverlayStyle();
+  //  setCustomSystemUIOverlayStyle();
   WidgetsFlutterBinding.ensureInitialized();
   // await dotenv.load(fileName: '.env');
   await di.init();
@@ -22,20 +22,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScreenUtilInit(
-        designSize: const Size(430, 932),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, child) => BlocBuilder(
-          bloc: getIt<ThemeDataSources>(),
-          builder: (context, state) {
-            state as bool;
-            return MaterialApp.router(
-              scaffoldMessengerKey: GlobalConstants.scaffoldMessengerKey,
-              debugShowCheckedModeBanner: false,
-              theme: state ? darkTheme : lightTheme,
-              routerConfig: AppRouter.router,
-            );
-          },
-        ),
-      );
+    designSize: const Size(430, 932),
+    minTextAdapt: true,
+    splitScreenMode: true,
+    builder: (_, Widget? child) => BlocBuilder<ThemeDataSources, bool>(
+      bloc: getIt<ThemeDataSources>(),
+      builder: (BuildContext context, bool state) {
+        return MaterialApp.router(
+          scaffoldMessengerKey: GlobalConstants.scaffoldMessengerKey,
+          debugShowCheckedModeBanner: false,
+          theme: state ? darkTheme : lightTheme,
+          routerConfig: AppRouter.router,
+        );
+      },
+    ),
+  );
 }
