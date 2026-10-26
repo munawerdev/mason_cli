@@ -29,6 +29,8 @@ analyzer:
       # Ignore protoc generated files
     - "dev/conductor/lib/proto/*"
     - "engine/**"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
 
 formatter:
   page_width: 100
