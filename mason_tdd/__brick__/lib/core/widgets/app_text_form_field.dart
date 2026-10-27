@@ -3,15 +3,6 @@ import 'package:material_ui/material_ui.dart';
 
 /// Simple configuration class for AppTextFormField overrides
 class AppTextFieldConfig {
-  final Color? fillColor;
-  final Color? borderColor;
-  final Color? focusedBorderColor;
-  final EdgeInsets? contentPadding;
-  final TextStyle? textStyle;
-  final TextStyle? labelStyle;
-  final TextStyle? hintStyle;
-  final TextInputAction? defaultTextInputAction;
-
   const AppTextFieldConfig({
     this.fillColor,
     this.borderColor,
@@ -22,22 +13,56 @@ class AppTextFieldConfig {
     this.hintStyle,
     this.defaultTextInputAction,
   });
+  final Color? fillColor;
+  final Color? borderColor;
+  final Color? focusedBorderColor;
+  final EdgeInsets? contentPadding;
+  final TextStyle? textStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? hintStyle;
+  final TextInputAction? defaultTextInputAction;
 }
 
 /// Enum for different text field variants
-enum AppTextFieldType {
-  standard,
-  email,
-  password,
-  phone,
-  number,
-  multiline,
-  search,
-  url,
-}
+enum AppTextFieldType { standard, email, password, phone, number, multiline, search, url }
 
 /// Main AppTextFormField widget with improved architecture
 class AppTextFormField extends StatefulWidget {
+  const AppTextFormField({
+    super.key,
+    this.controller,
+    this.labelText,
+    this.hintText,
+    this.type = AppTextFieldType.standard,
+    this.config,
+    this.validator,
+    this.required = false,
+    this.requiredMessage,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.prefixText,
+    this.suffixText,
+    this.readOnly = false,
+    this.enabled = true,
+    this.obscureText = false,
+    this.onTap,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.onEditingComplete,
+    this.focusNode,
+    this.maxLength,
+    this.maxLines,
+    this.minLines,
+    this.inputFormatters,
+    this.autofillHints,
+    this.textAlign = TextAlign.start,
+    this.textCapitalization = TextCapitalization.none,
+    this.textInputAction,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.fillColor,
+    this.borderColor,
+    this.focusedBorderColor,
+  });
   // Core properties
   final TextEditingController? controller;
   final String? labelText;
@@ -84,42 +109,6 @@ class AppTextFormField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final EdgeInsets scrollPadding;
 
-  const AppTextFormField({
-    super.key,
-    this.controller,
-    this.labelText,
-    this.hintText,
-    this.type = AppTextFieldType.standard,
-    this.config,
-    this.validator,
-    this.required = false,
-    this.requiredMessage,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.prefixText,
-    this.suffixText,
-    this.readOnly = false,
-    this.enabled = true,
-    this.obscureText = false,
-    this.onTap,
-    this.onChanged,
-    this.onFieldSubmitted,
-    this.onEditingComplete,
-    this.focusNode,
-    this.maxLength,
-    this.maxLines,
-    this.minLines,
-    this.inputFormatters,
-    this.autofillHints,
-    this.textAlign = TextAlign.start,
-    this.textCapitalization = TextCapitalization.none,
-    this.textInputAction,
-    this.scrollPadding = const EdgeInsets.all(20.0),
-    this.fillColor,
-    this.borderColor,
-    this.focusedBorderColor,
-  });
-
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
 }
@@ -130,14 +119,13 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   @override
   void initState() {
     super.initState();
-    _obscureText =
-        widget.obscureText || widget.type == AppTextFieldType.password;
+    _obscureText = widget.obscureText || widget.type == AppTextFieldType.password;
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final inputTheme = theme.inputDecorationTheme;
+    final ThemeData theme = Theme.of(context);
+    final InputDecorationThemeData inputTheme = theme.inputDecorationTheme;
 
     return TextFormField(
       controller: widget.controller,
@@ -145,7 +133,6 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       enabled: widget.enabled,
       readOnly: widget.readOnly,
       obscureText: _obscureText,
-      obscuringCharacter: '•',
       textAlign: widget.textAlign,
       textCapitalization: widget.textCapitalization,
       textInputAction: widget.textInputAction ?? _getTextInputAction(),
@@ -161,22 +148,19 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       onEditingComplete: widget.onEditingComplete,
-      style:
-          widget.config?.textStyle ??
-          inputTheme.labelStyle ??
-          theme.textTheme.bodyLarge,
+      style: widget.config?.textStyle ?? inputTheme.labelStyle ?? theme.textTheme.bodyLarge,
       decoration: _buildInputDecoration(context),
     );
   }
 
   InputDecoration _buildInputDecoration(BuildContext context) {
-    final theme = Theme.of(context);
-    final inputTheme = theme.inputDecorationTheme;
+    final ThemeData theme = Theme.of(context);
+    final InputDecorationThemeData inputTheme = theme.inputDecorationTheme;
 
     // Get border from theme for overrides
-    final baseBorder = inputTheme.border as OutlineInputBorder?;
-    final enabledBorder = inputTheme.enabledBorder as OutlineInputBorder?;
-    final focusedBorder = inputTheme.focusedBorder as OutlineInputBorder?;
+    final OutlineInputBorder? baseBorder = inputTheme.border as OutlineInputBorder?;
+    final OutlineInputBorder? enabledBorder = inputTheme.enabledBorder as OutlineInputBorder?;
+    final OutlineInputBorder? focusedBorder = inputTheme.focusedBorder as OutlineInputBorder?;
 
     // Apply overrides if provided
     final Color? borderColor = widget.borderColor ?? widget.config?.borderColor;
@@ -194,17 +178,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       isDense: inputTheme.isDense,
       filled: inputTheme.filled,
       fillColor: fillColor ?? inputTheme.fillColor,
-      contentPadding:
-          widget.config?.contentPadding ?? inputTheme.contentPadding,
+      contentPadding: widget.config?.contentPadding ?? inputTheme.contentPadding,
       floatingLabelBehavior: inputTheme.floatingLabelBehavior,
       alignLabelWithHint: inputTheme.alignLabelWithHint,
       labelStyle: widget.config?.labelStyle ?? inputTheme.labelStyle,
       hintStyle: widget.config?.hintStyle ?? inputTheme.hintStyle,
       errorStyle: inputTheme.errorStyle,
       border: borderColor != null && baseBorder != null
-          ? baseBorder.copyWith(
-              borderSide: baseBorder.borderSide.copyWith(color: borderColor),
-            )
+          ? baseBorder.copyWith(borderSide: baseBorder.borderSide.copyWith(color: borderColor))
           : inputTheme.border,
       enabledBorder: borderColor != null && enabledBorder != null
           ? enabledBorder.copyWith(
@@ -213,9 +194,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           : inputTheme.enabledBorder,
       focusedBorder: focusedBorderColor != null && focusedBorder != null
           ? focusedBorder.copyWith(
-              borderSide: focusedBorder.borderSide.copyWith(
-                color: focusedBorderColor,
-              ),
+              borderSide: focusedBorder.borderSide.copyWith(color: focusedBorderColor),
             )
           : inputTheme.focusedBorder,
       errorBorder: inputTheme.errorBorder,
@@ -235,10 +214,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   }
 
   String? Function(String?)? _buildValidator() {
-    if (widget.validator != null) return widget.validator;
-    if (!widget.required) return null;
+    if (widget.validator != null) {
+      return widget.validator;
+    }
+    if (!widget.required) {
+      return null;
+    }
 
-    return (value) {
+    return (String? value) {
       if (value == null || value.trim().isEmpty) {
         return widget.requiredMessage ?? 'This field is required';
       }
@@ -249,17 +232,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           if (!_isValidEmail(value)) {
             return 'Please enter a valid email address';
           }
-          break;
         case AppTextFieldType.phone:
           if (!_isValidPhone(value)) {
             return 'Please enter a valid phone number';
           }
-          break;
         case AppTextFieldType.url:
           if (!_isValidUrl(value)) {
             return 'Please enter a valid URL';
           }
-          break;
         default:
           break;
       }
@@ -292,17 +272,21 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   }
 
   int? _getMaxLines() {
-    if (widget.maxLines != null) return widget.maxLines;
-    if (widget.type == AppTextFieldType.multiline) return null;
+    if (widget.maxLines != null) {
+      return widget.maxLines;
+    }
+    if (widget.type == AppTextFieldType.multiline) {
+      return null;
+    }
     return 1;
   }
 
   List<TextInputFormatter>? _getInputFormatters() {
     switch (widget.type) {
       case AppTextFieldType.phone:
-        return [FilteringTextInputFormatter.digitsOnly];
+        return <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly];
       case AppTextFieldType.number:
-        return [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))];
+        return <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))];
       default:
         return null;
     }
@@ -311,13 +295,13 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   Iterable<String>? _getAutofillHints() {
     switch (widget.type) {
       case AppTextFieldType.email:
-        return [AutofillHints.email];
+        return <String>[AutofillHints.email];
       case AppTextFieldType.password:
-        return [AutofillHints.password];
+        return <String>[AutofillHints.password];
       case AppTextFieldType.phone:
-        return [AutofillHints.telephoneNumber];
+        return <String>[AutofillHints.telephoneNumber];
       case AppTextFieldType.url:
-        return [AutofillHints.url];
+        return <String>[AutofillHints.url];
       default:
         return null;
     }
@@ -333,8 +317,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   }
 
   bool _isValidUrl(String url) {
-    return RegExp(
-      r'^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$',
-    ).hasMatch(url);
+    return RegExp(r'^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$')
+        .hasMatch(url);
   }
 }

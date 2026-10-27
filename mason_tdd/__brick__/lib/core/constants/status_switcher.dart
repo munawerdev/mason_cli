@@ -10,17 +10,16 @@ import '/domain/failures/network/network_failure.dart';
 
 /// Configuration class for customizing StatusSwitcher appearance and behavior
 class StatusSwitcherConfig {
-  final bool showRetryButton;
-  final String retryButtonText;
-  final IconData errorIcon;
-  final String defaultNoDataTitle;
-
   const StatusSwitcherConfig({
     this.showRetryButton = true,
     this.retryButtonText = 'Try Again',
     this.errorIcon = Icons.sentiment_dissatisfied_rounded,
     this.defaultNoDataTitle = "There's nothing here",
   });
+  final bool showRetryButton;
+  final String retryButtonText;
+  final IconData errorIcon;
+  final String defaultNoDataTitle;
 
   StatusSwitcherConfig copyWith({
     bool? showRetryButton,
@@ -39,16 +38,6 @@ class StatusSwitcherConfig {
 
 /// Main StatusSwitcher widget with improved architecture
 class StatusSwitcher<T> extends StatelessWidget {
-  final ApiResponse<T> response;
-  final Widget Function(BuildContext context)? onLoading;
-  final Widget Function(BuildContext context, NetworkFailure error)? onError;
-  final Widget Function(BuildContext context, T data) onCompleted;
-  final VoidCallback? onRetry;
-  final StatusSwitcherConfig config;
-  final String? customErrorTitle;
-  final String? customNoDataTitle;
-  final String? customNoDataSubtitle;
-
   const StatusSwitcher({
     super.key,
     required this.response,
@@ -61,6 +50,15 @@ class StatusSwitcher<T> extends StatelessWidget {
     this.customNoDataTitle,
     this.customNoDataSubtitle,
   });
+  final ApiResponse<T> response;
+  final Widget Function(BuildContext context)? onLoading;
+  final Widget Function(BuildContext context, NetworkFailure error)? onError;
+  final Widget Function(BuildContext context, T data) onCompleted;
+  final VoidCallback? onRetry;
+  final StatusSwitcherConfig config;
+  final String? customErrorTitle;
+  final String? customNoDataTitle;
+  final String? customNoDataSubtitle;
 
   @override
   Widget build(BuildContext context) => _buildStatusWidget(context);
@@ -92,10 +90,18 @@ class StatusSwitcher<T> extends StatelessWidget {
   }
 
   bool _isDataEmpty(T? data) {
-    if (data == null) return true;
-    if (data is Iterable) return data.isEmpty;
-    if (data is String) return data.isEmpty;
-    if (data is Map) return data.isEmpty;
+    if (data == null) {
+      return true;
+    }
+    if (data is Iterable) {
+      return data.isEmpty;
+    }
+    if (data is String) {
+      return data.isEmpty;
+    }
+    if (data is Map) {
+      return data.isEmpty;
+    }
 
     return false;
   }
@@ -104,23 +110,21 @@ class StatusSwitcher<T> extends StatelessWidget {
 /// Default loading widget component
 class _DefaultLoadingWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) =>
-      const Center(child: CircularProgressIndicator.adaptive());
+  Widget build(BuildContext context) => const Center(child: CircularProgressIndicator.adaptive());
 }
 
 /// Professional error widget with better UX
 class _DefaultErrorWidget extends StatefulWidget {
-  final NetworkFailure failure;
-  final VoidCallback? onRetry;
-  final StatusSwitcherConfig config;
-  final String? customTitle;
-
   const _DefaultErrorWidget({
     required this.failure,
     this.onRetry,
     required this.config,
     this.customTitle,
   });
+  final NetworkFailure failure;
+  final VoidCallback? onRetry;
+  final StatusSwitcherConfig config;
+  final String? customTitle;
 
   @override
   State<_DefaultErrorWidget> createState() => _DefaultErrorWidgetState();
@@ -135,10 +139,7 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(milliseconds: 600), vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -164,8 +165,7 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
 
   @override
   Widget build(BuildContext context) {
-    final shouldShowRetry =
-        widget.config.showRetryButton && widget.onRetry != null;
+    final bool shouldShowRetry = widget.config.showRetryButton && widget.onRetry != null;
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -177,15 +177,14 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: <Widget>[
                 // Error Icon with animated container
                 _buildErrorIcon(_errorProperties.color),
 
                 24.verticalSpace,
 
                 // Status code badge (if available)
-                if (widget.failure.statusCode != null)
-                  _buildStatusBadge(_errorProperties.color),
+                if (widget.failure.statusCode != null) _buildStatusBadge(_errorProperties.color),
 
                 if (widget.failure.statusCode != null) 12.verticalSpace,
 
@@ -197,7 +196,7 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
                 // Error message
                 _buildErrorMessage(context, _errorProperties.color),
 
-                if (shouldShowRetry) ...[
+                if (shouldShowRetry) ...<Widget>[
                   32.verticalSpace,
                   _buildRetryButton(context, _errorProperties.color),
                 ],
@@ -228,13 +227,10 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
     ),
     child: Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      children: <Widget>[
         Icon(Icons.info_outline_rounded, size: 14.sp, color: errorColor),
         6.horizontalSpace,
-        Text(
-          'Error ${widget.failure.statusCode}',
-          style: context.textTheme.labelMedium,
-        ),
+        Text('Error ${widget.failure.statusCode}', style: context.textTheme.labelMedium),
       ],
     ),
   );
@@ -245,23 +241,20 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
     textAlign: TextAlign.center,
   );
 
-  Widget _buildErrorMessage(BuildContext context, Color errorColor) =>
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: context.theme.colorScheme.primary.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: context.theme.colorScheme.primary.withValues(alpha: 0.3),
-          ),
-        ),
-        child: Text(
-          widget.failure.error,
+  Widget _buildErrorMessage(BuildContext context, Color errorColor) => Container(
+    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+    decoration: BoxDecoration(
+      color: context.theme.colorScheme.primary.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: context.theme.colorScheme.primary.withValues(alpha: 0.3)),
+    ),
+    child: Text(
+      widget.failure.error,
 
-          style: context.textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-      );
+      style: context.textTheme.bodyMedium,
+      textAlign: TextAlign.center,
+    ),
+  );
 
   Widget _buildRetryButton(BuildContext context, Color errorColor) =>
       AppButton(onPressed: widget.onRetry, text: widget.config.retryButtonText);
@@ -269,11 +262,10 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
 
 /// Default no data widget component
 class _DefaultNoDataWidget extends StatelessWidget {
+  const _DefaultNoDataWidget({required this.config, this.title, this.subtitle});
   final StatusSwitcherConfig config;
   final String? title;
   final String? subtitle;
-
-  const _DefaultNoDataWidget({required this.config, this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) => Container(
@@ -281,18 +273,11 @@ class _DefaultNoDataWidget extends StatelessWidget {
     child: Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title ?? config.defaultNoDataTitle,
-            style: context.textTheme.titleMedium,
-          ),
-          if (subtitle != null) ...[
+        children: <Widget>[
+          Text(title ?? config.defaultNoDataTitle, style: context.textTheme.titleMedium),
+          if (subtitle != null) ...<Widget>[
             11.verticalSpace,
-            Text(
-              subtitle!,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyMedium,
-            ),
+            Text(subtitle!, textAlign: TextAlign.center, style: context.textTheme.bodyMedium),
           ],
         ],
       ),

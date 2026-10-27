@@ -4,11 +4,10 @@ import 'package:material_ui/material_ui.dart';
 
 /// Lightweight config for quick actions in the custom app bar.
 class AppBarAction {
+  const AppBarAction({required this.icon, this.onPressed, this.tooltip});
   final Widget icon;
   final VoidCallback? onPressed;
   final String? tooltip;
-
-  const AppBarAction({required this.icon, this.onPressed, this.tooltip});
 }
 
 /// Theme-aware custom app bar — use like any PreferredSizeWidget
@@ -86,17 +85,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? semanticLabel;
 
   @override
-  Size get preferredSize => Size.fromHeight(
-    (toolbarHeight?.h ?? _kToolbarHeight) + (bottom?.preferredSize.height ?? 0),
-  );
+  Size get preferredSize =>
+      Size.fromHeight((toolbarHeight?.h ?? _kToolbarHeight) + (bottom?.preferredSize.height ?? 0));
 
   // Matches Flutter's internal default, avoids depending on theme at build time
   static const double _kToolbarHeight = 56.0;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appBarTheme = theme.appBarTheme;
+    final ThemeData theme = Theme.of(context);
+    final AppBarThemeData appBarTheme = theme.appBarTheme;
 
     Widget appBar = AppBar(
       automaticallyImplyLeading: automaticallyImplyLeading,
@@ -105,8 +103,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       shadowColor: shadowColor ?? appBarTheme.shadowColor,
       surfaceTintColor: surfaceTintColor ?? appBarTheme.surfaceTintColor,
       elevation: elevation ?? appBarTheme.elevation ?? 0.0,
-      scrolledUnderElevation:
-          scrolledUnderElevation ?? appBarTheme.scrolledUnderElevation ?? 0.0,
+      scrolledUnderElevation: scrolledUnderElevation ?? appBarTheme.scrolledUnderElevation ?? 0.0,
       toolbarHeight: toolbarHeight?.h ?? appBarTheme.toolbarHeight?.h,
       leadingWidth: leadingWidth?.w ?? appBarTheme.leadingWidth?.w,
       centerTitle: centerTitle ?? appBarTheme.centerTitle ?? true,
@@ -128,13 +125,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget? _buildLeading(BuildContext context, ThemeData theme) {
-    if (!showLeading) return null;
-    if (leading != null) return leading;
+    if (!showLeading) {
+      return null;
+    }
+    if (leading != null) {
+      return leading;
+    }
 
-    final appBarTheme = theme.appBarTheme;
-    final iconTheme = appBarTheme.iconTheme ?? theme.iconTheme;
-    final iconSize = leadingIconSize?.sp ?? iconTheme.size?.sp ?? 24.0.sp;
-    final iconPadding = leadingIconPadding ?? EdgeInsets.all(14.0.w);
+    final AppBarThemeData appBarTheme = theme.appBarTheme;
+    final IconThemeData iconTheme = appBarTheme.iconTheme ?? theme.iconTheme;
+    final double iconSize = leadingIconSize?.sp ?? iconTheme.size?.sp ?? 24.0.sp;
+    final EdgeInsets iconPadding = leadingIconPadding ?? EdgeInsets.all(14.0.w);
 
     return Padding(
       padding: EdgeInsets.only(left: 16.w),
@@ -148,24 +149,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildLeadingIcon(double size, Color? color) {
     if (leadingIconAsset != null) {
-      return Image.asset(
-        leadingIconAsset!,
-        color: color,
-        height: size,
-        width: size,
-      );
+      return Image.asset(leadingIconAsset!, color: color, height: size, width: size);
     }
 
-    return Icon(
-      leadingIcon ?? Icons.arrow_back_ios_new_rounded,
-      color: color,
-      size: size,
-    );
+    return Icon(leadingIcon ?? Icons.arrow_back_ios_new_rounded, color: color, size: size);
   }
 
   Widget? _buildTitle(AppBarThemeData appBarTheme) {
-    if (titleWidget != null) return titleWidget;
-    if (title == null) return null;
+    if (titleWidget != null) {
+      return titleWidget;
+    }
+    if (title == null) {
+      return null;
+    }
 
     return Text(
       title!,
@@ -176,10 +172,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   List<Widget>? _buildActions() {
-    final allActions = <Widget>[
+    final List<Widget> allActions = <Widget>[
       if (quickActions != null)
         ...quickActions!.map(
-          (action) => Padding(
+          (AppBarAction action) => Padding(
             padding: EdgeInsets.only(right: 8.w),
             child: IconButton(
               onPressed: action.onPressed,
@@ -191,9 +187,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       if (actions != null) ...actions!,
     ];
 
-    if (allActions.isEmpty) return null;
+    if (allActions.isEmpty) {
+      return null;
+    }
 
     // Trailing padding done via a SizedBox action — cleaner than hacking margins
-    return [...allActions, SizedBox(width: 8.w)];
+    return <Widget>[...allActions, SizedBox(width: 8.w)];
   }
 }

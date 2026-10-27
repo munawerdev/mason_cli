@@ -1,5 +1,4 @@
 class GetLocalStorageFailure {
+  GetLocalStorageFailure({this.error = ''});
   final String error;
-
-  GetLocalStorageFailure({this.error = ""});
 }

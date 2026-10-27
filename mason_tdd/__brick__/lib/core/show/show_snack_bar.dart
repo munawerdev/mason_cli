@@ -7,13 +7,11 @@ import '/domain/failures/network/network_failure.dart';
 
 /// An animated text widget for SnackBars
 class AnimatedSnackBarContent extends StatefulWidget {
+  const AnimatedSnackBarContent({super.key, required this.message});
   final String message;
 
-  const AnimatedSnackBarContent({super.key, required this.message});
-
   @override
-  State<AnimatedSnackBarContent> createState() =>
-      _AnimatedSnackBarContentState();
+  State<AnimatedSnackBarContent> createState() => _AnimatedSnackBarContentState();
 }
 
 class _AnimatedSnackBarContentState extends State<AnimatedSnackBarContent>
@@ -25,10 +23,7 @@ class _AnimatedSnackBarContentState extends State<AnimatedSnackBarContent>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(milliseconds: 400), vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -55,18 +50,17 @@ class _AnimatedSnackBarContentState extends State<AnimatedSnackBarContent>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Text(
-          widget.message,
-          style: const TextStyle(color: Colors.white),
-        ),
+        child: Text(widget.message, style: const TextStyle(color: Colors.white)),
       ),
     );
   }
 }
 
 void _showAppSnackBar(SnackBar snackBar) {
-  final messenger = GlobalConstants.scaffoldMessengerKey.currentState;
-  if (messenger == null) return;
+  final ScaffoldMessengerState? messenger = GlobalConstants.scaffoldMessengerKey.currentState;
+  if (messenger == null) {
+    return;
+  }
 
   messenger.clearSnackBars();
   messenger.showSnackBar(snackBar);
@@ -80,17 +74,11 @@ mixin ShowSnackBarSuccess {
         backgroundColor: Colors.grey.shade800,
         behavior: SnackBarBehavior.floating,
         dismissDirection: DismissDirection.down,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0.r),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
         margin: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 20.0.h),
         duration: const Duration(seconds: 3),
         persist: false,
-        action: SnackBarAction(
-          label: 'DISMISS',
-          textColor: Colors.white,
-          onPressed: () {},
-        ),
+        action: SnackBarAction(label: 'DISMISS', textColor: Colors.white, onPressed: () {}),
       ),
     );
   }
@@ -99,7 +87,7 @@ mixin ShowSnackBarSuccess {
 mixin ShowSnackBarError {
   /// Shows error snackbar with NetworkFailure
   void showNetworkErrorSnackBar(BuildContext context, NetworkFailure failure) {
-    final properties = ErrorDisplayHelper.getDisplayProperties(
+    final ErrorDisplayProperties properties = ErrorDisplayHelper.getDisplayProperties(
       context,
       failure,
     );
@@ -116,19 +104,12 @@ mixin ShowSnackBarError {
         dismissDirection: DismissDirection.down,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0.r),
-          side: BorderSide(
-            color: properties.color.withValues(alpha: 0.3),
-            width: 1.5,
-          ),
+          side: BorderSide(color: properties.color.withValues(alpha: 0.3), width: 1.5),
         ),
         margin: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 20.0.h),
         duration: const Duration(seconds: 3),
         persist: false,
-        action: SnackBarAction(
-          label: 'DISMISS',
-          textColor: properties.color,
-          onPressed: () {},
-        ),
+        action: SnackBarAction(label: 'DISMISS', textColor: properties.color, onPressed: () {}),
       ),
     );
   }
@@ -148,11 +129,7 @@ mixin ShowSnackBarError {
         margin: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 20.0.h),
         duration: const Duration(seconds: 3),
         persist: false,
-        action: SnackBarAction(
-          label: 'DISMISS',
-          textColor: Colors.white,
-          onPressed: () {},
-        ),
+        action: SnackBarAction(label: 'DISMISS', textColor: Colors.white, onPressed: () {}),
       ),
     );
   }
@@ -160,15 +137,10 @@ mixin ShowSnackBarError {
 
 /// Enhanced snackbar content with icon for errors
 class _ErrorSnackBarContent extends StatefulWidget {
+  const _ErrorSnackBarContent({required this.message, required this.icon, required this.color});
   final String message;
   final IconData icon;
   final Color color;
-
-  const _ErrorSnackBarContent({
-    required this.message,
-    required this.icon,
-    required this.color,
-  });
 
   @override
   State<_ErrorSnackBarContent> createState() => _ErrorSnackBarContentState();
@@ -184,10 +156,7 @@ class _ErrorSnackBarContentState extends State<_ErrorSnackBarContent>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(milliseconds: 400), vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -222,7 +191,7 @@ class _ErrorSnackBarContentState extends State<_ErrorSnackBarContent>
         child: ScaleTransition(
           scale: _scaleAnimation,
           child: Row(
-            children: [
+            children: <Widget>[
               Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(

@@ -4,57 +4,6 @@ import 'package:material_ui/material_ui.dart';
 
 /// Configuration class for AppCachedNetworkImage styling and behavior
 class AppImageConfig {
-  // Size and layout
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final Alignment alignment;
-
-  // Styling
-  final BorderRadius? borderRadius;
-  final Color? backgroundColor;
-  final List<BoxShadow>? boxShadow;
-  final Border? border;
-  final DecorationImage? backgroundImage;
-
-  // Cache settings
-  final int? memCacheWidth;
-  final int? memCacheHeight;
-  final int? maxWidthDiskCache;
-  final int? maxHeightDiskCache;
-  final bool enableMemoryCache;
-  final bool enableDiskCache;
-
-  // Animation
-  final Duration fadeInDuration;
-  final Duration fadeOutDuration;
-  final Curve fadeInCurve;
-  final Curve fadeOutCurve;
-  final bool useOldImageOnUrlChange;
-
-  // Loading indicator
-  final bool showLoadingIndicator;
-  final Widget? customLoadingWidget;
-  final Color? loadingBackgroundColor;
-  final Color? loadingIndicatorColor;
-  final double loadingIndicatorSize;
-  final double loadingIndicatorStrokeWidth;
-
-  // Error handling
-  final bool showErrorWidget;
-  final Widget? customErrorWidget;
-  final IconData errorIcon;
-  final Color? errorIconColor;
-  final double errorIconSize;
-  final Color? errorBackgroundColor;
-
-  // User initials (for profile images)
-  final bool enableUserInitials;
-  final Color? initialsBackgroundColor;
-  final Color? initialsTextColor;
-  final TextStyle? initialsTextStyle;
-  final String defaultInitial;
-
   const AppImageConfig({
     // Size and layout
     this.width,
@@ -107,6 +56,56 @@ class AppImageConfig {
     this.initialsTextStyle,
     this.defaultInitial = '?',
   });
+  // Size and layout
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+  final Alignment alignment;
+
+  // Styling
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
+  final List<BoxShadow>? boxShadow;
+  final Border? border;
+  final DecorationImage? backgroundImage;
+
+  // Cache settings
+  final int? memCacheWidth;
+  final int? memCacheHeight;
+  final int? maxWidthDiskCache;
+  final int? maxHeightDiskCache;
+  final bool enableMemoryCache;
+  final bool enableDiskCache;
+
+  // Animation
+  final Duration fadeInDuration;
+  final Duration fadeOutDuration;
+  final Curve fadeInCurve;
+  final Curve fadeOutCurve;
+  final bool useOldImageOnUrlChange;
+
+  // Loading indicator
+  final bool showLoadingIndicator;
+  final Widget? customLoadingWidget;
+  final Color? loadingBackgroundColor;
+  final Color? loadingIndicatorColor;
+  final double loadingIndicatorSize;
+  final double loadingIndicatorStrokeWidth;
+
+  // Error handling
+  final bool showErrorWidget;
+  final Widget? customErrorWidget;
+  final IconData errorIcon;
+  final Color? errorIconColor;
+  final double errorIconSize;
+  final Color? errorBackgroundColor;
+
+  // User initials (for profile images)
+  final bool enableUserInitials;
+  final Color? initialsBackgroundColor;
+  final Color? initialsTextColor;
+  final TextStyle? initialsTextStyle;
+  final String defaultInitial;
 
   AppImageConfig copyWith({
     double? width,
@@ -167,17 +166,13 @@ class AppImageConfig {
       fadeOutDuration: fadeOutDuration ?? this.fadeOutDuration,
       fadeInCurve: fadeInCurve ?? this.fadeInCurve,
       fadeOutCurve: fadeOutCurve ?? this.fadeOutCurve,
-      useOldImageOnUrlChange:
-          useOldImageOnUrlChange ?? this.useOldImageOnUrlChange,
+      useOldImageOnUrlChange: useOldImageOnUrlChange ?? this.useOldImageOnUrlChange,
       showLoadingIndicator: showLoadingIndicator ?? this.showLoadingIndicator,
       customLoadingWidget: customLoadingWidget ?? this.customLoadingWidget,
-      loadingBackgroundColor:
-          loadingBackgroundColor ?? this.loadingBackgroundColor,
-      loadingIndicatorColor:
-          loadingIndicatorColor ?? this.loadingIndicatorColor,
+      loadingBackgroundColor: loadingBackgroundColor ?? this.loadingBackgroundColor,
+      loadingIndicatorColor: loadingIndicatorColor ?? this.loadingIndicatorColor,
       loadingIndicatorSize: loadingIndicatorSize ?? this.loadingIndicatorSize,
-      loadingIndicatorStrokeWidth:
-          loadingIndicatorStrokeWidth ?? this.loadingIndicatorStrokeWidth,
+      loadingIndicatorStrokeWidth: loadingIndicatorStrokeWidth ?? this.loadingIndicatorStrokeWidth,
       showErrorWidget: showErrorWidget ?? this.showErrorWidget,
       customErrorWidget: customErrorWidget ?? this.customErrorWidget,
       errorIcon: errorIcon ?? this.errorIcon,
@@ -185,8 +180,7 @@ class AppImageConfig {
       errorIconSize: errorIconSize ?? this.errorIconSize,
       errorBackgroundColor: errorBackgroundColor ?? this.errorBackgroundColor,
       enableUserInitials: enableUserInitials ?? this.enableUserInitials,
-      initialsBackgroundColor:
-          initialsBackgroundColor ?? this.initialsBackgroundColor,
+      initialsBackgroundColor: initialsBackgroundColor ?? this.initialsBackgroundColor,
       initialsTextColor: initialsTextColor ?? this.initialsTextColor,
       initialsTextStyle: initialsTextStyle ?? this.initialsTextStyle,
       defaultInitial: defaultInitial ?? this.defaultInitial,
@@ -196,6 +190,19 @@ class AppImageConfig {
 
 /// Main AppCachedNetworkImage widget with improved architecture
 class AppCachedNetworkImage extends StatelessWidget {
+  const AppCachedNetworkImage({
+    super.key,
+    this.imageUrl,
+    this.config,
+    this.userName,
+    this.fallbackAsset,
+    this.fallbackWidget,
+    this.onTap,
+    this.onImageLoaded,
+    this.onImageError,
+    this.semanticLabel,
+    this.excludeFromSemantics = false,
+  });
   // Core properties
   final String? imageUrl;
   final AppImageConfig? config;
@@ -214,23 +221,9 @@ class AppCachedNetworkImage extends StatelessWidget {
   final String? semanticLabel;
   final bool excludeFromSemantics;
 
-  const AppCachedNetworkImage({
-    super.key,
-    this.imageUrl,
-    this.config,
-    this.userName,
-    this.fallbackAsset,
-    this.fallbackWidget,
-    this.onTap,
-    this.onImageLoaded,
-    this.onImageError,
-    this.semanticLabel,
-    this.excludeFromSemantics = false,
-  });
-
   @override
   Widget build(BuildContext context) {
-    final effectiveConfig = config ?? _getBaseDefaultConfig(context);
+    final AppImageConfig effectiveConfig = config ?? _getBaseDefaultConfig(context);
     Widget imageWidget = _buildImageWidget(context, effectiveConfig);
 
     // Add tap functionality if provided
@@ -240,18 +233,14 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Add semantics
     if (!excludeFromSemantics) {
-      imageWidget = Semantics(
-        label: semanticLabel ?? 'Image',
-        image: true,
-        child: imageWidget,
-      );
+      imageWidget = Semantics(label: semanticLabel ?? 'Image', image: true, child: imageWidget);
     }
 
     return imageWidget;
   }
 
   AppImageConfig _getBaseDefaultConfig(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     return AppImageConfig(
       loadingBackgroundColor: theme.colorScheme.surfaceContainerHighest,
       loadingIndicatorColor: theme.colorScheme.primary,
@@ -290,7 +279,7 @@ class AppCachedNetworkImage extends StatelessWidget {
           fadeInCurve: config.fadeInCurve,
           fadeOutCurve: config.fadeOutCurve,
           useOldImageOnUrlChange: config.useOldImageOnUrlChange,
-          imageBuilder: (context, imageProvider) {
+          imageBuilder: (BuildContext context, ImageProvider<Object> imageProvider) {
             onImageLoaded?.call();
             return Container(
               decoration: BoxDecoration(
@@ -304,10 +293,10 @@ class AppCachedNetworkImage extends StatelessWidget {
             );
           },
           placeholder: config.showLoadingIndicator
-              ? (context, url) => _buildLoadingWidget(context, config)
+              ? (BuildContext context, String url) => _buildLoadingWidget(context, config)
               : null,
           errorWidget: config.showErrorWidget
-              ? (context, url, error) {
+              ? (BuildContext context, String url, Object error) {
                   onImageError?.call(error);
                   return _buildErrorWidget(context, config);
                 }
@@ -325,9 +314,7 @@ class AppCachedNetworkImage extends StatelessWidget {
     return Container(
       width: config.width?.w,
       height: config.height?.h,
-      color:
-          config.loadingBackgroundColor ??
-          Theme.of(context).colorScheme.surfaceContainerHighest,
+      color: config.loadingBackgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Center(
         child: SizedBox(
           width: config.loadingIndicatorSize.w,
@@ -335,8 +322,7 @@ class AppCachedNetworkImage extends StatelessWidget {
           child: CircularProgressIndicator.adaptive(
             strokeWidth: config.loadingIndicatorStrokeWidth.w,
             valueColor: AlwaysStoppedAnimation<Color>(
-              config.loadingIndicatorColor ??
-                  Theme.of(context).colorScheme.primary,
+              config.loadingIndicatorColor ?? Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -361,26 +347,18 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Show custom fallback widget
     if (fallbackWidget != null) {
-      return SizedBox(
-        width: config.width?.w,
-        height: config.height?.h,
-        child: fallbackWidget,
-      );
+      return SizedBox(width: config.width?.w, height: config.height?.h, child: fallbackWidget);
     }
 
     // Default error widget
     return Container(
       width: config.width?.w,
       height: config.height?.h,
-      color:
-          config.errorBackgroundColor ??
-          Theme.of(context).colorScheme.errorContainer,
+      color: config.errorBackgroundColor ?? Theme.of(context).colorScheme.errorContainer,
       child: Center(
         child: Icon(
           config.errorIcon,
-          color:
-              config.errorIconColor ??
-              Theme.of(context).colorScheme.onErrorContainer,
+          color: config.errorIconColor ?? Theme.of(context).colorScheme.onErrorContainer,
           size: config.errorIconSize.w,
         ),
       ),
@@ -388,17 +366,15 @@ class AppCachedNetworkImage extends StatelessWidget {
   }
 
   Widget _buildUserInitialsWidget(BuildContext context, AppImageConfig config) {
-    final theme = Theme.of(context);
-    final initials = _getUserInitials(userName);
-    final fontSize = config.width != null ? (config.width! / 2.5).sp : 16.0.sp;
+    final ThemeData theme = Theme.of(context);
+    final String initials = _getUserInitials(userName);
+    final double fontSize = config.width != null ? (config.width! / 2.5).sp : 16.0.sp;
 
     return Container(
       width: config.width?.w,
       height: config.height?.h,
       decoration: BoxDecoration(
-        color:
-            config.initialsBackgroundColor ??
-            theme.colorScheme.primary.withOpacity(0.1),
+        color: config.initialsBackgroundColor ?? theme.colorScheme.primary.withOpacity(0.1),
         borderRadius: config.borderRadius,
       ),
       child: Center(
@@ -447,11 +423,7 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Show custom fallback widget
     if (fallbackWidget != null) {
-      return SizedBox(
-        width: config.width?.w,
-        height: config.height?.h,
-        child: fallbackWidget,
-      );
+      return SizedBox(width: config.width?.w, height: config.height?.h, child: fallbackWidget);
     }
 
     // Default fallback
@@ -459,11 +431,12 @@ class AppCachedNetworkImage extends StatelessWidget {
   }
 
   String _getUserInitials(String? name) {
-    if (name == null || name.trim().isEmpty)
+    if (name == null || name.trim().isEmpty) {
       return config?.defaultInitial ?? '?';
+    }
 
-    final trimmedName = name.trim();
-    final words = trimmedName.split(RegExp(r'\s+'));
+    final String trimmedName = name.trim();
+    final List<String> words = trimmedName.split(RegExp(r'\s+'));
 
     if (words.length >= 2) {
       return '${words[0][0]}${words[1][0]}'.toUpperCase();

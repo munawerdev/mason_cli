@@ -16,6 +16,22 @@ import 'package:material_ui/material_ui.dart';
 /// )
 /// ```
 class PaginatedListView<T> extends StatefulWidget {
+  const PaginatedListView({
+    super.key,
+    required this.items,
+    required this.isLoadingMore,
+    required this.itemBuilder,
+    required this.onLoadMore,
+    this.onRefresh,
+    this.loadingWidget,
+    this.scrollController,
+    this.loadMoreThreshold = 200.0,
+    this.showLoadingIndicator = true,
+    this.padding,
+    this.physics,
+    this.shrinkWrap = false,
+  });
+
   /// List of items to display
   final List<T> items;
 
@@ -51,22 +67,6 @@ class PaginatedListView<T> extends StatefulWidget {
 
   /// Whether the list should shrink wrap
   final bool shrinkWrap;
-
-  const PaginatedListView({
-    super.key,
-    required this.items,
-    required this.isLoadingMore,
-    required this.itemBuilder,
-    required this.onLoadMore,
-    this.onRefresh,
-    this.loadingWidget,
-    this.scrollController,
-    this.loadMoreThreshold = 200.0,
-    this.showLoadingIndicator = true,
-    this.padding,
-    this.physics,
-    this.shrinkWrap = false,
-  });
 
   @override
   State<PaginatedListView<T>> createState() => _PaginatedListViewState<T>();
@@ -105,9 +105,8 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCount =
-        widget.items.length +
-        (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
+    final int itemCount =
+        widget.items.length + (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
 
     return RefreshIndicator.adaptive(
       onRefresh: widget.onRefresh ?? () async {},
@@ -117,15 +116,13 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
         physics: widget.physics,
         shrinkWrap: widget.shrinkWrap,
         itemCount: itemCount,
-        itemBuilder: (context, index) {
+        itemBuilder: (BuildContext context, int index) {
           if (index >= widget.items.length) {
             // Show loading indicator at bottom
             return widget.loadingWidget ??
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
+                  child: const Center(child: CircularProgressIndicator.adaptive()),
                 );
           }
 
@@ -138,6 +135,26 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
 
 /// A paginated grid view widget for displaying items in a grid layout
 class PaginatedGridView<T> extends StatefulWidget {
+  const PaginatedGridView({
+    super.key,
+    required this.items,
+    required this.isLoadingMore,
+    required this.itemBuilder,
+    required this.crossAxisCount,
+    required this.onLoadMore,
+    this.onRefresh,
+    this.childAspectRatio = 1.0,
+    this.crossAxisSpacing = 0.0,
+    this.mainAxisSpacing = 0.0,
+    this.loadingWidget,
+    this.scrollController,
+    this.loadMoreThreshold = 200.0,
+    this.showLoadingIndicator = true,
+    this.padding,
+    this.physics,
+    this.shrinkWrap = false,
+  });
+
   /// List of items to display
   final List<T> items;
 
@@ -186,26 +203,6 @@ class PaginatedGridView<T> extends StatefulWidget {
   /// Whether the grid should shrink wrap
   final bool shrinkWrap;
 
-  const PaginatedGridView({
-    super.key,
-    required this.items,
-    required this.isLoadingMore,
-    required this.itemBuilder,
-    required this.crossAxisCount,
-    required this.onLoadMore,
-    this.onRefresh,
-    this.childAspectRatio = 1.0,
-    this.crossAxisSpacing = 0.0,
-    this.mainAxisSpacing = 0.0,
-    this.loadingWidget,
-    this.scrollController,
-    this.loadMoreThreshold = 200.0,
-    this.showLoadingIndicator = true,
-    this.padding,
-    this.physics,
-    this.shrinkWrap = false,
-  });
-
   @override
   State<PaginatedGridView<T>> createState() => _PaginatedGridViewState<T>();
 }
@@ -243,9 +240,8 @@ class _PaginatedGridViewState<T> extends State<PaginatedGridView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCount =
-        widget.items.length +
-        (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
+    final int itemCount =
+        widget.items.length + (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
 
     return RefreshIndicator.adaptive(
       onRefresh: widget.onRefresh ?? () async {},
@@ -261,7 +257,7 @@ class _PaginatedGridViewState<T> extends State<PaginatedGridView<T>> {
           mainAxisSpacing: widget.mainAxisSpacing,
         ),
         itemCount: itemCount,
-        itemBuilder: (context, index) {
+        itemBuilder: (BuildContext context, int index) {
           if (index >= widget.items.length) {
             // Show loading indicator at bottom
             return widget.loadingWidget ??

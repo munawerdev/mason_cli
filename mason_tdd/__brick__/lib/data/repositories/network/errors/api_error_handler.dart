@@ -43,9 +43,7 @@ class ApiErrorHandler {
         );
       case DioExceptionType.badCertificate:
         return NetworkFailure(
-          error:
-              'SSL certificate error. Please check your connection security.',
-          type: NetworkFailureType.unknown,
+          error: 'SSL certificate error. Please check your connection security.',
           additionalData: _extractAdditionalData(error),
         );
       case DioExceptionType.unknown:
@@ -54,9 +52,9 @@ class ApiErrorHandler {
   }
 
   NetworkFailure _handleBadResponse(DioException error) {
-    final statusCode = error.response?.statusCode;
-    final responseData = error.response?.data;
-    final errorMessage = _extractErrorMessage(responseData);
+    final int? statusCode = error.response?.statusCode;
+    final dynamic responseData = error.response?.data;
+    final String errorMessage = _extractErrorMessage(responseData);
 
     switch (statusCode) {
       case 400:
@@ -81,7 +79,7 @@ class ApiErrorHandler {
         return NetworkFailure(
           error: errorMessage.isNotEmpty
               ? errorMessage
-              : 'Access forbidden. You don\'t have permission.',
+              : "Access forbidden. You don't have permission.",
           type: NetworkFailureType.forbidden,
           statusCode: statusCode,
           additionalData: _normalizeAdditionalData(responseData),
@@ -118,8 +116,7 @@ class ApiErrorHandler {
         );
       case 413:
         return NetworkFailure(
-          error:
-              'Request entity too large. Please reduce the size of your request.',
+          error: 'Request entity too large. Please reduce the size of your request.',
           type: NetworkFailureType.badRequest,
           statusCode: statusCode,
           additionalData: _normalizeAdditionalData(responseData),
@@ -220,8 +217,7 @@ class ApiErrorHandler {
         );
       case 504:
         return NetworkFailure(
-          error:
-              'Gateway timeout. The server did not receive a timely response.',
+          error: 'Gateway timeout. The server did not receive a timely response.',
           type: NetworkFailureType.badGateway,
           statusCode: statusCode,
           additionalData: _normalizeAdditionalData(responseData),
@@ -264,18 +260,14 @@ class ApiErrorHandler {
       default:
         if (statusCode != null && statusCode >= 400 && statusCode < 500) {
           return NetworkFailure(
-            error: errorMessage.isNotEmpty
-                ? errorMessage
-                : 'Client error occurred',
+            error: errorMessage.isNotEmpty ? errorMessage : 'Client error occurred',
             type: NetworkFailureType.badRequest,
             statusCode: statusCode,
             additionalData: _normalizeAdditionalData(responseData),
           );
         } else if (statusCode != null && statusCode >= 500) {
           return NetworkFailure(
-            error: errorMessage.isNotEmpty
-                ? errorMessage
-                : 'Server error occurred',
+            error: errorMessage.isNotEmpty ? errorMessage : 'Server error occurred',
             type: NetworkFailureType.internalServerError,
             statusCode: statusCode,
             additionalData: _normalizeAdditionalData(responseData),
@@ -292,7 +284,7 @@ class ApiErrorHandler {
 
   NetworkFailure _handleConnectionError(DioException error) {
     if (error.error is SocketException) {
-      final socketError = error.error as SocketException;
+      final SocketException socketError = error.error! as SocketException;
       return NetworkFailure(
         error: socketError.message.isNotEmpty
             ? 'Connection failed: ${socketError.message}'
@@ -319,7 +311,7 @@ class ApiErrorHandler {
 
   NetworkFailure _handleUnknownError(DioException error) {
     if (error.error is SocketException) {
-      final socketError = error.error as SocketException;
+      final SocketException socketError = error.error! as SocketException;
       return NetworkFailure(
         error: socketError.message.isNotEmpty
             ? 'Network error: ${socketError.message}'
@@ -353,24 +345,24 @@ class ApiErrorHandler {
       );
     }
 
-    final errorString =
-        error.error?.toString() ?? error.message ?? 'Unknown error';
+    final String errorString = error.error?.toString() ?? error.message ?? 'Unknown error';
     return NetworkFailure(
       error: 'Unknown network error: $errorString',
-      type: NetworkFailureType.unknown,
       additionalData: _extractAdditionalData(error),
     );
   }
 
   /// Extracts error message from various response data formats
   String _extractErrorMessage(dynamic responseData) {
-    if (responseData == null) return '';
+    if (responseData == null) {
+      return '';
+    }
 
     // Handle String response
     if (responseData is String) {
       try {
         // Try to parse as JSON if it's a JSON string
-        final decoded = responseData.trim();
+        final String decoded = responseData.trim();
         if (decoded.startsWith('{') || decoded.startsWith('[')) {
           // It might be JSON, but we'll return it as is for now
           return decoded;
@@ -384,7 +376,7 @@ class ApiErrorHandler {
     // Handle Map response
     if (responseData is Map<String, dynamic>) {
       // Try common error message fields
-      final message =
+      final dynamic message =
           responseData['message'] ??
           responseData['error'] ??
           responseData['error_message'] ??
@@ -396,9 +388,11 @@ class ApiErrorHandler {
           responseData['status_message'];
 
       if (message != null) {
-        if (message is String) return message;
+        if (message is String) {
+          return message;
+        }
         if (message is List) {
-          return message.map((e) => e.toString()).join(', ');
+          return message.map((dynamic e) => e.toString()).join(', ');
         }
         return message.toString();
       }
@@ -414,14 +408,18 @@ class ApiErrorHandler {
       }
 
       // If no message found, try to stringify the map
-      if (responseData.isEmpty) return '';
+      if (responseData.isEmpty) {
+        return '';
+      }
       return responseData.toString();
     }
 
     // Handle List response
     if (responseData is List) {
-      if (responseData.isEmpty) return '';
-      return responseData.map((e) => e.toString()).join(', ');
+      if (responseData.isEmpty) {
+        return '';
+      }
+      return responseData.map((dynamic e) => e.toString()).join(', ');
     }
 
     return responseData.toString();
@@ -429,17 +427,21 @@ class ApiErrorHandler {
 
   /// Extracts error messages from errors map/object
   String _extractErrorsFromMap(dynamic errors) {
-    if (errors == null) return '';
+    if (errors == null) {
+      return '';
+    }
 
-    if (errors is String) return errors;
+    if (errors is String) {
+      return errors;
+    }
 
     if (errors is List) {
-      return errors.map((e) => e.toString()).join(', ');
+      return errors.map((dynamic e) => e.toString()).join(', ');
     }
 
     if (errors is Map) {
-      final List<String> errorMessages = [];
-      errors.forEach((key, value) {
+      final List<String> errorMessages = <String>[];
+      errors.forEach((dynamic key, dynamic value) {
         if (value is List) {
           errorMessages.add('$key: ${value.join(", ")}');
         } else if (value is Map) {
@@ -456,7 +458,9 @@ class ApiErrorHandler {
 
   /// Normalizes additional data to Map<String, dynamic> format
   Map<String, dynamic>? _normalizeAdditionalData(dynamic data) {
-    if (data == null) return null;
+    if (data == null) {
+      return null;
+    }
 
     if (data is Map<String, dynamic>) {
       return data;
@@ -469,22 +473,22 @@ class ApiErrorHandler {
     if (data is String) {
       try {
         // Try to parse JSON string
-        return {'raw': data};
+        return <String, dynamic>{'raw': data};
       } catch (_) {
-        return {'raw': data};
+        return <String, dynamic>{'raw': data};
       }
     }
 
     if (data is List) {
-      return {'items': data};
+      return <String, dynamic>{'items': data};
     }
 
-    return {'data': data.toString()};
+    return <String, dynamic>{'data': data.toString()};
   }
 
   /// Extracts additional data from DioException
   Map<String, dynamic>? _extractAdditionalData(DioException error) {
-    final responseData = error.response?.data;
+    final dynamic responseData = error.response?.data;
     return _normalizeAdditionalData(responseData);
   }
 }

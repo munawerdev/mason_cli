@@ -50,11 +50,9 @@ class AppSystemUI {
   ///
   /// [brightness] - The current theme brightness
   /// [customStyle] - Optional custom style to override defaults
-  static void apply({
-    Brightness brightness = Brightness.light,
-    SystemUiOverlayStyle? customStyle,
-  }) {
-    final style = customStyle ?? (brightness == Brightness.dark ? dark : light);
+  static void apply({Brightness brightness = Brightness.light, SystemUiOverlayStyle? customStyle}) {
+    final SystemUiOverlayStyle style =
+        customStyle ?? (brightness == Brightness.dark ? dark : light);
 
     SystemChrome.setSystemUIOverlayStyle(style);
   }
@@ -70,7 +68,7 @@ class AppSystemUI {
   ///
   /// [context] - BuildContext to get theme from
   static void applyFromContext(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
+    final Brightness brightness = Theme.of(context).brightness;
     apply(brightness: brightness);
   }
 
@@ -91,7 +89,7 @@ class AppSystemUI {
 
   /// Lock to portrait orientation
   static Future<void> lockPortrait() {
-    return setOrientation([
+    return setOrientation(<DeviceOrientation>[
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
@@ -99,7 +97,7 @@ class AppSystemUI {
 
   /// Lock to landscape orientation
   static Future<void> lockLandscape() {
-    return setOrientation([
+    return setOrientation(<DeviceOrientation>[
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);

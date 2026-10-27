@@ -5,17 +5,16 @@ import 'bottom_nav_navigator.dart';
 import 'bottom_nav_state.dart';
 
 class BottomNavCubit extends Cubit<BottomNavState> {
-  final BottomNavNavigator navigator;
-  final BottomNavInitialParams initialParams;
   BottomNavCubit(this.initialParams, this.navigator)
     : super(BottomNavState.initial(initialParams: initialParams)) {
     setSelectedIndex(initialParams.selectedIndex);
   }
+  final BottomNavNavigator navigator;
+  final BottomNavInitialParams initialParams;
 
-  void setSelectedIndex(int index) =>
-      emit(state.copyWith(selectedIndex: index));
+  void setSelectedIndex(int index) => emit(state.copyWith(selectedIndex: index));
 
   // List<Widget> get pages => [
-  //   {{class_name}}Page(cubit: getIt(param1: const {{class_name}}InitialParams()))
+  //   HomePage(cubit: getIt(param1: const HomeInitialParams()))
   // ];
 }

@@ -3,9 +3,8 @@ import 'package:material_ui/material_ui.dart';
 import 'login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
-  final LoginCubit cubit;
-
   const LoginPage({super.key, required this.cubit});
+  final LoginCubit cubit;
 
   @override
   State<LoginPage> createState() => _LoginState();

@@ -7,20 +7,37 @@ import '/config/response/status.dart';
 ///
 /// Usage:
 /// ```dart
-/// class MyCubit extends Cubit<MyState> with PaginationMixin {
+/// class MyCubit extends Cubit<MyState> with PaginationMixin<MyState> {
 ///   Future<void> loadMore() async {
 ///     await loadMoreData<MyDataModel>(
 ///       fetchData: (page, limit) async {
 ///         final response = await networkRepository.get<Map<String, dynamic>>(
 ///           url: AppUrl.test,
-///           queryParams: {'limit': limit.toString(), 'skip': page.toString()},
+///           queryParams: {
+///             'limit': limit.toString(),
+///             'skip': page.toString(),
+///           },
 ///         );
+///
 ///         return response.fold(
 ///           (l) => ApiResponse.error(l),
 ///           (r) => ApiResponse.completed(TestModel.fromJson(r)),
 ///         );
 ///       },
-///       mergeData: (current, new) => current.copyWith(items: [...current.items, ...new.items]),
+///       getCurrentData: (state) => state.response.data as MyDataModel,
+///       getIsLoadingMore: (state) => state.isLoadingMore,
+///       copyWithState: (
+///         state, {
+///         bool? isLoadingMore,
+///         ApiResponse<MyDataModel>? response,
+///       }) =>
+///           state.copyWith(
+///             response: response ?? state.response,
+///             isLoadingMore: isLoadingMore ?? state.isLoadingMore,
+///           ),
+///       mergeData: (current, newData) => current.copyWith(
+///         items: [...current.items, ...newData.items],
+///       ),
 ///       getCurrentCount: (data) => data.items.length,
 ///       getTotalCount: (data) => data.total,
 ///     );
@@ -34,12 +51,18 @@ mixin PaginationMixin<S> on Cubit<S> {
     required TData Function(TData current, TData newData) mergeData,
     required int Function(TData) getCurrentCount,
     required int Function(TData) getTotalCount,
+
+    // Typed callbacks resolve dynamic property access.
+    required TData Function(S state) getCurrentData,
+    required bool Function(S state) getIsLoadingMore,
+    required S Function(S state, {bool? isLoadingMore, ApiResponse<TData>? response}) copyWithState,
+
     int limit = 10,
   }) async {
     // Get current state and data
-    final dynamic currentState = state as dynamic;
-    final TData currentData = currentState.response.data as TData;
-    final bool isLoadingMore = currentState.isLoadingMore as bool;
+    final S currentState = state;
+    final TData currentData = getCurrentData(currentState);
+    final bool isLoadingMore = getIsLoadingMore(currentState);
 
     // Early return if loading or no more data
     if (isLoadingMore || getCurrentCount(currentData) >= getTotalCount(currentData)) {
@@ -47,21 +70,26 @@ mixin PaginationMixin<S> on Cubit<S> {
     }
 
     // Set loading
-    emit(currentState.copyWith(isLoadingMore: true));
+    emit(copyWithState(currentState, isLoadingMore: true));
 
     try {
       final ApiResponse<TData> response = await fetchData(getCurrentCount(currentData), limit);
 
       if (response.status == Status.completed) {
         final TData mergedData = mergeData(currentData, response.data);
+
         emit(
-          currentState.copyWith(response: ApiResponse.completed(mergedData), isLoadingMore: false),
+          copyWithState(
+            currentState,
+            response: ApiResponse<TData>.completed(mergedData),
+            isLoadingMore: false,
+          ),
         );
       } else {
-        emit(currentState.copyWith(isLoadingMore: false));
+        emit(copyWithState(currentState, isLoadingMore: false));
       }
     } catch (e) {
-      emit(currentState.copyWith(isLoadingMore: false));
+      emit(copyWithState(currentState, isLoadingMore: false));
     }
   }
 }
