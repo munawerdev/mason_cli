@@ -17,7 +17,8 @@ class UpdateThemeUseCase {
         .setBool(key: GlobalConstants.themeKey, value: isDarkTheme)
         .then(
           (Either<SetLocalStorageFailure, bool> value) => value.fold(
-            (SetLocalStorageFailure l) => left(UpdateThemeFailure(error: l.error)),
+            (SetLocalStorageFailure l) =>
+                left(UpdateThemeFailure(error: l.error)),
             (bool r) => right(true),
           ),
         );

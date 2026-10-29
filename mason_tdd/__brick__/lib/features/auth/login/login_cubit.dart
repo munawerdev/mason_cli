@@ -11,11 +11,6 @@ import 'login_navigator.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final LoginInitialParams initialParams;
-  final NetworkBaseApiService networkRepository;
-  final UserUseCases userUseCases;
-  final LoginNavigator navigator;
-  final Show show;
 
   LoginCubit(
     this.initialParams,
@@ -24,6 +19,11 @@ class LoginCubit extends Cubit<LoginState> {
     this.show,
     this.navigator,
   ) : super(LoginState.initial(initialParams: initialParams));
+  final LoginInitialParams initialParams;
+  final NetworkBaseApiService networkRepository;
+  final UserUseCases userUseCases;
+  final LoginNavigator navigator;
+  final Show show;
 
   Future<void> login({required LoginModel body}) async {
     emit(state.copyWith(isLoading: true));

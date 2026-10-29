@@ -85,8 +85,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? semanticLabel;
 
   @override
-  Size get preferredSize =>
-      Size.fromHeight((toolbarHeight?.h ?? _kToolbarHeight) + (bottom?.preferredSize.height ?? 0));
+  Size get preferredSize => Size.fromHeight(
+    (toolbarHeight?.h ?? _kToolbarHeight) + (bottom?.preferredSize.height ?? 0),
+  );
 
   // Matches Flutter's internal default, avoids depending on theme at build time
   static const double _kToolbarHeight = 56.0;
@@ -103,7 +104,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       shadowColor: shadowColor ?? appBarTheme.shadowColor,
       surfaceTintColor: surfaceTintColor ?? appBarTheme.surfaceTintColor,
       elevation: elevation ?? appBarTheme.elevation ?? 0.0,
-      scrolledUnderElevation: scrolledUnderElevation ?? appBarTheme.scrolledUnderElevation ?? 0.0,
+      scrolledUnderElevation:
+          scrolledUnderElevation ?? appBarTheme.scrolledUnderElevation ?? 0.0,
       toolbarHeight: toolbarHeight?.h ?? appBarTheme.toolbarHeight?.h,
       leadingWidth: leadingWidth?.w ?? appBarTheme.leadingWidth?.w,
       centerTitle: centerTitle ?? appBarTheme.centerTitle ?? true,
@@ -134,7 +136,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final AppBarThemeData appBarTheme = theme.appBarTheme;
     final IconThemeData iconTheme = appBarTheme.iconTheme ?? theme.iconTheme;
-    final double iconSize = leadingIconSize?.sp ?? iconTheme.size?.sp ?? 24.0.sp;
+    final double iconSize =
+        leadingIconSize?.sp ?? iconTheme.size?.sp ?? 24.0.sp;
     final EdgeInsets iconPadding = leadingIconPadding ?? EdgeInsets.all(14.0.w);
 
     return Padding(
@@ -149,10 +152,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildLeadingIcon(double size, Color? color) {
     if (leadingIconAsset != null) {
-      return Image.asset(leadingIconAsset!, color: color, height: size, width: size);
+      return Image.asset(
+        leadingIconAsset!,
+        color: color,
+        height: size,
+        width: size,
+      );
     }
 
-    return Icon(leadingIcon ?? Icons.arrow_back_ios_new_rounded, color: color, size: size);
+    return Icon(
+      leadingIcon ?? Icons.arrow_back_ios_new_rounded,
+      color: color,
+      size: size,
+    );
   }
 
   Widget? _buildTitle(AppBarThemeData appBarTheme) {

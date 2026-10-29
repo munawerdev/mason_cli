@@ -3,5 +3,8 @@ class LoginModel {
   String email;
   String password;
 
-  Map<String, dynamic> toJson() => <String, dynamic>{'email': email, 'password': password};
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'email': email,
+    'password': password,
+  };
 }

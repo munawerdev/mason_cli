@@ -110,7 +110,8 @@ class StatusSwitcher<T> extends StatelessWidget {
 /// Default loading widget component
 class _DefaultLoadingWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => const Center(child: CircularProgressIndicator.adaptive());
+  Widget build(BuildContext context) =>
+      const Center(child: CircularProgressIndicator.adaptive());
 }
 
 /// Professional error widget with better UX
@@ -139,7 +140,10 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 600), vsync: this);
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -165,7 +169,8 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
 
   @override
   Widget build(BuildContext context) {
-    final bool shouldShowRetry = widget.config.showRetryButton && widget.onRetry != null;
+    final bool shouldShowRetry =
+        widget.config.showRetryButton && widget.onRetry != null;
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -184,7 +189,8 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
                 24.verticalSpace,
 
                 // Status code badge (if available)
-                if (widget.failure.statusCode != null) _buildStatusBadge(_errorProperties.color),
+                if (widget.failure.statusCode != null)
+                  _buildStatusBadge(_errorProperties.color),
 
                 if (widget.failure.statusCode != null) 12.verticalSpace,
 
@@ -230,7 +236,10 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
       children: <Widget>[
         Icon(Icons.info_outline_rounded, size: 14.sp, color: errorColor),
         6.horizontalSpace,
-        Text('Error ${widget.failure.statusCode}', style: context.textTheme.labelMedium),
+        Text(
+          'Error ${widget.failure.statusCode}',
+          style: context.textTheme.labelMedium,
+        ),
       ],
     ),
   );
@@ -241,20 +250,23 @@ class _DefaultErrorWidgetState extends State<_DefaultErrorWidget>
     textAlign: TextAlign.center,
   );
 
-  Widget _buildErrorMessage(BuildContext context, Color errorColor) => Container(
-    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-    decoration: BoxDecoration(
-      color: context.theme.colorScheme.primary.withValues(alpha: 0.05),
-      borderRadius: BorderRadius.circular(12.r),
-      border: Border.all(color: context.theme.colorScheme.primary.withValues(alpha: 0.3)),
-    ),
-    child: Text(
-      widget.failure.error,
+  Widget _buildErrorMessage(BuildContext context, Color errorColor) =>
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: context.theme.colorScheme.primary.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: context.theme.colorScheme.primary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Text(
+          widget.failure.error,
 
-      style: context.textTheme.bodyMedium,
-      textAlign: TextAlign.center,
-    ),
-  );
+          style: context.textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+      );
 
   Widget _buildRetryButton(BuildContext context, Color errorColor) =>
       AppButton(onPressed: widget.onRetry, text: widget.config.retryButtonText);
@@ -274,10 +286,17 @@ class _DefaultNoDataWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(title ?? config.defaultNoDataTitle, style: context.textTheme.titleMedium),
+          Text(
+            title ?? config.defaultNoDataTitle,
+            style: context.textTheme.titleMedium,
+          ),
           if (subtitle != null) ...<Widget>[
             11.verticalSpace,
-            Text(subtitle!, textAlign: TextAlign.center, style: context.textTheme.bodyMedium),
+            Text(
+              subtitle!,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium,
+            ),
           ],
         ],
       ),

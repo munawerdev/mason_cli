@@ -9,7 +9,11 @@ import '/domain/repositories/network/network_base_api_service.dart';
 import 'dio_config.dart';
 
 class DioNetworkRepository implements NetworkBaseApiService {
-  DioNetworkRepository(this._userDataSources, this._localStorageRepository, this._apiErrorHandler) {
+  DioNetworkRepository(
+    this._userDataSources,
+    this._localStorageRepository,
+    this._apiErrorHandler,
+  ) {
     _dio = DioConfig.createDio(
       userDataSources: _userDataSources,
       localStorageRepository: _localStorageRepository,
@@ -56,7 +60,9 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
+          contentType: isFormData
+              ? Headers.multipartFormDataContentType
+              : Headers.jsonContentType,
         ),
       ),
     );
@@ -81,7 +87,9 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
+          contentType: isFormData
+              ? Headers.multipartFormDataContentType
+              : Headers.jsonContentType,
         ),
       ),
     );
@@ -106,7 +114,9 @@ class DioNetworkRepository implements NetworkBaseApiService {
         onSendProgress: onSendProgress,
         options: Options(
           headers: headers,
-          contentType: isFormData ? Headers.multipartFormDataContentType : Headers.jsonContentType,
+          contentType: isFormData
+              ? Headers.multipartFormDataContentType
+              : Headers.jsonContentType,
         ),
       ),
     );

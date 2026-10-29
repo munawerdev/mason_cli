@@ -43,7 +43,8 @@ class ApiErrorHandler {
         );
       case DioExceptionType.badCertificate:
         return NetworkFailure(
-          error: 'SSL certificate error. Please check your connection security.',
+          error:
+              'SSL certificate error. Please check your connection security.',
           additionalData: _extractAdditionalData(error),
         );
       case DioExceptionType.unknown:
@@ -100,9 +101,7 @@ class ApiErrorHandler {
         );
       case 409:
         return NetworkFailure(
-          error: errorMessage.isNotEmpty
-              ? 'Conflict: $errorMessage'
-              : 'Resource conflict. The request conflicts with the current state.',
+          error: errorMessage.isNotEmpty ? 'Conflict: $errorMessage' : 'Resource conflict. The request conflicts with the current state.',
           type: NetworkFailureType.badRequest,
           statusCode: statusCode,
           additionalData: _normalizeAdditionalData(responseData),
@@ -217,7 +216,8 @@ class ApiErrorHandler {
         );
       case 504:
         return NetworkFailure(
-          error: 'Gateway timeout. The server did not receive a timely response.',
+          error:
+              'Gateway timeout. The server did not receive a timely response.',
           type: NetworkFailureType.badGateway,
           statusCode: statusCode,
           additionalData: _normalizeAdditionalData(responseData),
@@ -260,14 +260,18 @@ class ApiErrorHandler {
       default:
         if (statusCode != null && statusCode >= 400 && statusCode < 500) {
           return NetworkFailure(
-            error: errorMessage.isNotEmpty ? errorMessage : 'Client error occurred',
+            error: errorMessage.isNotEmpty
+                ? errorMessage
+                : 'Client error occurred',
             type: NetworkFailureType.badRequest,
             statusCode: statusCode,
             additionalData: _normalizeAdditionalData(responseData),
           );
         } else if (statusCode != null && statusCode >= 500) {
           return NetworkFailure(
-            error: errorMessage.isNotEmpty ? errorMessage : 'Server error occurred',
+            error: errorMessage.isNotEmpty
+                ? errorMessage
+                : 'Server error occurred',
             type: NetworkFailureType.internalServerError,
             statusCode: statusCode,
             additionalData: _normalizeAdditionalData(responseData),
@@ -345,7 +349,8 @@ class ApiErrorHandler {
       );
     }
 
-    final String errorString = error.error?.toString() ?? error.message ?? 'Unknown error';
+    final String errorString =
+        error.error?.toString() ?? error.message ?? 'Unknown error';
     return NetworkFailure(
       error: 'Unknown network error: $errorString',
       additionalData: _extractAdditionalData(error),

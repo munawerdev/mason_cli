@@ -31,7 +31,8 @@ class NetworkFailure {
   final Map<String, dynamic>? additionalData;
 
   @override
-  String toString() => 'NetworkFailure(error: $error, type: $type, statusCode: $statusCode)';
+  String toString() =>
+      'NetworkFailure(error: $error, type: $type, statusCode: $statusCode)';
 
   @override
   bool operator ==(Object other) =>

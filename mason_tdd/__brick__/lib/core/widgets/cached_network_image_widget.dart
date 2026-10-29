@@ -166,13 +166,17 @@ class AppImageConfig {
       fadeOutDuration: fadeOutDuration ?? this.fadeOutDuration,
       fadeInCurve: fadeInCurve ?? this.fadeInCurve,
       fadeOutCurve: fadeOutCurve ?? this.fadeOutCurve,
-      useOldImageOnUrlChange: useOldImageOnUrlChange ?? this.useOldImageOnUrlChange,
+      useOldImageOnUrlChange:
+          useOldImageOnUrlChange ?? this.useOldImageOnUrlChange,
       showLoadingIndicator: showLoadingIndicator ?? this.showLoadingIndicator,
       customLoadingWidget: customLoadingWidget ?? this.customLoadingWidget,
-      loadingBackgroundColor: loadingBackgroundColor ?? this.loadingBackgroundColor,
-      loadingIndicatorColor: loadingIndicatorColor ?? this.loadingIndicatorColor,
+      loadingBackgroundColor:
+          loadingBackgroundColor ?? this.loadingBackgroundColor,
+      loadingIndicatorColor:
+          loadingIndicatorColor ?? this.loadingIndicatorColor,
       loadingIndicatorSize: loadingIndicatorSize ?? this.loadingIndicatorSize,
-      loadingIndicatorStrokeWidth: loadingIndicatorStrokeWidth ?? this.loadingIndicatorStrokeWidth,
+      loadingIndicatorStrokeWidth:
+          loadingIndicatorStrokeWidth ?? this.loadingIndicatorStrokeWidth,
       showErrorWidget: showErrorWidget ?? this.showErrorWidget,
       customErrorWidget: customErrorWidget ?? this.customErrorWidget,
       errorIcon: errorIcon ?? this.errorIcon,
@@ -180,7 +184,8 @@ class AppImageConfig {
       errorIconSize: errorIconSize ?? this.errorIconSize,
       errorBackgroundColor: errorBackgroundColor ?? this.errorBackgroundColor,
       enableUserInitials: enableUserInitials ?? this.enableUserInitials,
-      initialsBackgroundColor: initialsBackgroundColor ?? this.initialsBackgroundColor,
+      initialsBackgroundColor:
+          initialsBackgroundColor ?? this.initialsBackgroundColor,
       initialsTextColor: initialsTextColor ?? this.initialsTextColor,
       initialsTextStyle: initialsTextStyle ?? this.initialsTextStyle,
       defaultInitial: defaultInitial ?? this.defaultInitial,
@@ -223,7 +228,8 @@ class AppCachedNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppImageConfig effectiveConfig = config ?? _getBaseDefaultConfig(context);
+    final AppImageConfig effectiveConfig =
+        config ?? _getBaseDefaultConfig(context);
     Widget imageWidget = _buildImageWidget(context, effectiveConfig);
 
     // Add tap functionality if provided
@@ -233,7 +239,11 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Add semantics
     if (!excludeFromSemantics) {
-      imageWidget = Semantics(label: semanticLabel ?? 'Image', image: true, child: imageWidget);
+      imageWidget = Semantics(
+        label: semanticLabel ?? 'Image',
+        image: true,
+        child: imageWidget,
+      );
     }
 
     return imageWidget;
@@ -279,21 +289,23 @@ class AppCachedNetworkImage extends StatelessWidget {
           fadeInCurve: config.fadeInCurve,
           fadeOutCurve: config.fadeOutCurve,
           useOldImageOnUrlChange: config.useOldImageOnUrlChange,
-          imageBuilder: (BuildContext context, ImageProvider<Object> imageProvider) {
-            onImageLoaded?.call();
-            return Container(
-              decoration: BoxDecoration(
-                color: config.backgroundColor,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: config.fit,
-                  alignment: config.alignment,
-                ),
-              ),
-            );
-          },
+          imageBuilder:
+              (BuildContext context, ImageProvider<Object> imageProvider) {
+                onImageLoaded?.call();
+                return Container(
+                  decoration: BoxDecoration(
+                    color: config.backgroundColor,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: config.fit,
+                      alignment: config.alignment,
+                    ),
+                  ),
+                );
+              },
           placeholder: config.showLoadingIndicator
-              ? (BuildContext context, String url) => _buildLoadingWidget(context, config)
+              ? (BuildContext context, String url) =>
+                    _buildLoadingWidget(context, config)
               : null,
           errorWidget: config.showErrorWidget
               ? (BuildContext context, String url, Object error) {
@@ -314,7 +326,9 @@ class AppCachedNetworkImage extends StatelessWidget {
     return Container(
       width: config.width?.w,
       height: config.height?.h,
-      color: config.loadingBackgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
+      color:
+          config.loadingBackgroundColor ??
+          Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Center(
         child: SizedBox(
           width: config.loadingIndicatorSize.w,
@@ -322,7 +336,8 @@ class AppCachedNetworkImage extends StatelessWidget {
           child: CircularProgressIndicator.adaptive(
             strokeWidth: config.loadingIndicatorStrokeWidth.w,
             valueColor: AlwaysStoppedAnimation<Color>(
-              config.loadingIndicatorColor ?? Theme.of(context).colorScheme.primary,
+              config.loadingIndicatorColor ??
+                  Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -347,18 +362,26 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Show custom fallback widget
     if (fallbackWidget != null) {
-      return SizedBox(width: config.width?.w, height: config.height?.h, child: fallbackWidget);
+      return SizedBox(
+        width: config.width?.w,
+        height: config.height?.h,
+        child: fallbackWidget,
+      );
     }
 
     // Default error widget
     return Container(
       width: config.width?.w,
       height: config.height?.h,
-      color: config.errorBackgroundColor ?? Theme.of(context).colorScheme.errorContainer,
+      color:
+          config.errorBackgroundColor ??
+          Theme.of(context).colorScheme.errorContainer,
       child: Center(
         child: Icon(
           config.errorIcon,
-          color: config.errorIconColor ?? Theme.of(context).colorScheme.onErrorContainer,
+          color:
+              config.errorIconColor ??
+              Theme.of(context).colorScheme.onErrorContainer,
           size: config.errorIconSize.w,
         ),
       ),
@@ -368,13 +391,17 @@ class AppCachedNetworkImage extends StatelessWidget {
   Widget _buildUserInitialsWidget(BuildContext context, AppImageConfig config) {
     final ThemeData theme = Theme.of(context);
     final String initials = _getUserInitials(userName);
-    final double fontSize = config.width != null ? (config.width! / 2.5).sp : 16.0.sp;
+    final double fontSize = config.width != null
+        ? (config.width! / 2.5).sp
+        : 16.0.sp;
 
     return Container(
       width: config.width?.w,
       height: config.height?.h,
       decoration: BoxDecoration(
-        color: config.initialsBackgroundColor ?? theme.colorScheme.primary.withOpacity(0.1),
+        color:
+            config.initialsBackgroundColor ??
+            theme.colorScheme.primary.withOpacity(0.1),
         borderRadius: config.borderRadius,
       ),
       child: Center(
@@ -423,7 +450,11 @@ class AppCachedNetworkImage extends StatelessWidget {
 
     // Show custom fallback widget
     if (fallbackWidget != null) {
-      return SizedBox(width: config.width?.w, height: config.height?.h, child: fallbackWidget);
+      return SizedBox(
+        width: config.width?.w,
+        height: config.height?.h,
+        child: fallbackWidget,
+      );
     }
 
     // Default fallback

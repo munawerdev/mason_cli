@@ -106,7 +106,8 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
   @override
   Widget build(BuildContext context) {
     final int itemCount =
-        widget.items.length + (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
+        widget.items.length +
+        (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
 
     return RefreshIndicator.adaptive(
       onRefresh: widget.onRefresh ?? () async {},
@@ -122,7 +123,9 @@ class _PaginatedListViewState<T> extends State<PaginatedListView<T>> {
             return widget.loadingWidget ??
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 16.h),
-                  child: const Center(child: CircularProgressIndicator.adaptive()),
+                  child: const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
                 );
           }
 
@@ -241,7 +244,8 @@ class _PaginatedGridViewState<T> extends State<PaginatedGridView<T>> {
   @override
   Widget build(BuildContext context) {
     final int itemCount =
-        widget.items.length + (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
+        widget.items.length +
+        (widget.showLoadingIndicator && widget.isLoadingMore ? 1 : 0);
 
     return RefreshIndicator.adaptive(
       onRefresh: widget.onRefresh ?? () async {},

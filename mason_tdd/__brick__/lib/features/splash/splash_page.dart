@@ -27,6 +27,8 @@ class _SplashState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator.adaptive()));
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator.adaptive()),
+    );
   }
 }

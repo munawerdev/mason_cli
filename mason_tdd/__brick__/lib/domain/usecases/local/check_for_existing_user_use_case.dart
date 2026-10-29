@@ -7,7 +7,10 @@ import '/domain/repositories/local/local_storage_base_api_service.dart';
 import '../../failures/local/get_local_storage_failure.dart';
 
 class CheckForExistingUserUseCase {
-  CheckForExistingUserUseCase(this._userDataSources, this._localStorageRepository);
+  CheckForExistingUserUseCase(
+    this._userDataSources,
+    this._localStorageRepository,
+  );
   final UserDataSources _userDataSources;
   final LocalStorageBaseApiService _localStorageRepository;
 
@@ -17,7 +20,9 @@ class CheckForExistingUserUseCase {
         (GetLocalStorageFailure l) => left(ExistingUserFailure(error: l.error)),
         (UserInfoStoreModel localUserInfoStoreModel) {
           if (localUserInfoStoreModel.accessToken.isNotEmpty) {
-            _userDataSources.setUserDataSources(userInfoStoreModel: localUserInfoStoreModel);
+            _userDataSources.setUserDataSources(
+              userInfoStoreModel: localUserInfoStoreModel,
+            );
             return right(localUserInfoStoreModel);
           }
           return left(ExistingUserFailure(error: "User doesn't exist "));

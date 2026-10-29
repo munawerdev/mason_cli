@@ -88,7 +88,10 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     if (err.response?.statusCode != 401) {
       return handler.next(err);
     }
@@ -141,7 +144,9 @@ class AuthInterceptor extends Interceptor {
       final Response<dynamic> refreshResponse = await _refreshDio.post(
         AppUrl.refreshToken,
         data: <String, String>{'refreshToken': refreshToken},
-        options: Options(headers: <String, dynamic>{'Content-Type': 'application/json'}),
+        options: Options(
+          headers: <String, dynamic>{'Content-Type': 'application/json'},
+        ),
       );
 
       log('Refresh Token Response: ${refreshResponse.data}');
@@ -151,8 +156,11 @@ class AuthInterceptor extends Interceptor {
         return null;
       }
 
-      final Map<String, dynamic> newTokensJson = refreshResponse.data as Map<String, dynamic>;
-      final UserInfoStoreModel newUserData = UserInfoStoreModel.fromJson(newTokensJson);
+      final Map<String, dynamic> newTokensJson =
+          refreshResponse.data as Map<String, dynamic>;
+      final UserInfoStoreModel newUserData = UserInfoStoreModel.fromJson(
+        newTokensJson,
+      );
       final String newAccessToken = newUserData.accessToken;
 
       if (newAccessToken.isEmpty) {
@@ -161,12 +169,15 @@ class AuthInterceptor extends Interceptor {
       }
 
       // Persist and update in-memory session
-      final Either<SetLocalStorageFailure, bool> result = await _localStorageRepository.setUserData(
-        userInfoStoreModel: newUserData,
-      );
+      final Either<SetLocalStorageFailure, bool> result =
+          await _localStorageRepository.setUserData(
+            userInfoStoreModel: newUserData,
+          );
       result.fold(
         (SetLocalStorageFailure l) => log('Failed to save user data: $l'),
-        (bool r) => _userDataSources.setUserDataSources(userInfoStoreModel: newUserData),
+        (bool r) => _userDataSources.setUserDataSources(
+          userInfoStoreModel: newUserData,
+        ),
       );
 
       return newAccessToken;
@@ -180,7 +191,9 @@ class AuthInterceptor extends Interceptor {
     // Use a clean Dio instance to retry the original request. This avoids
     // re-running the auth interceptor on the retry.
     final Dio retryDio = Dio()..options = _refreshDio.options;
-    final Response<dynamic> retriedResponse = await retryDio.fetch(requestOptions);
+    final Response<dynamic> retriedResponse = await retryDio.fetch(
+      requestOptions,
+    );
     log('Retried Response: ${retriedResponse.data}');
     return retriedResponse;
   }

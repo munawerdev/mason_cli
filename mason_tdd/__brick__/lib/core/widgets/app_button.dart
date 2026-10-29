@@ -26,7 +26,10 @@ class AppButton extends StatelessWidget {
   }) : _variant = _ButtonVariant.elevated,
        borderColor = null,
        borderWidth = null,
-       assert(text != null || child != null, 'Either text or child must be provided');
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   const AppButton.outlined({
     super.key,
@@ -50,7 +53,10 @@ class AppButton extends StatelessWidget {
   }) : _variant = _ButtonVariant.outlined,
        backgroundColor = null,
        elevation = null,
-       assert(text != null || child != null, 'Either text or child must be provided');
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   const AppButton.text({
     super.key,
@@ -74,7 +80,10 @@ class AppButton extends StatelessWidget {
        elevation = null,
        borderColor = null,
        borderWidth = null,
-       assert(text != null || child != null, 'Either text or child must be provided');
+       assert(
+         text != null || child != null,
+         'Either text or child must be provided',
+       );
 
   final _ButtonVariant _variant;
   final String? text;
@@ -105,7 +114,9 @@ class AppButton extends StatelessWidget {
 
     Widget button = SizedBox(
       // Text buttons shouldn't force full width by default
-      width: _variant == _ButtonVariant.text ? width?.w : (width?.w ?? double.infinity),
+      width: _variant == _ButtonVariant.text
+          ? width?.w
+          : (width?.w ?? double.infinity),
       height: height?.h,
       child: switch (_variant) {
         _ButtonVariant.elevated => _buildElevated(context, theme),
@@ -128,9 +139,15 @@ class AppButton extends StatelessWidget {
   Widget _buildElevated(BuildContext context, ThemeData theme) {
     return ElevatedButton(
       style: theme.elevatedButtonTheme.style?.copyWith(
-        backgroundColor: backgroundColor != null ? WidgetStateProperty.all(backgroundColor) : null,
-        foregroundColor: foregroundColor != null ? WidgetStateProperty.all(foregroundColor) : null,
-        elevation: elevation != null ? WidgetStateProperty.all(elevation) : null,
+        backgroundColor: backgroundColor != null
+            ? WidgetStateProperty.all(backgroundColor)
+            : null,
+        foregroundColor: foregroundColor != null
+            ? WidgetStateProperty.all(foregroundColor)
+            : null,
+        elevation: elevation != null
+            ? WidgetStateProperty.all(elevation)
+            : null,
       ),
       onPressed: _isDisabled ? null : onPressed,
       onLongPress: _isDisabled ? null : onLongPress,
@@ -141,7 +158,9 @@ class AppButton extends StatelessWidget {
   Widget _buildOutlined(BuildContext context, ThemeData theme) {
     return OutlinedButton(
       style: theme.outlinedButtonTheme.style?.copyWith(
-        foregroundColor: foregroundColor != null ? WidgetStateProperty.all(foregroundColor) : null,
+        foregroundColor: foregroundColor != null
+            ? WidgetStateProperty.all(foregroundColor)
+            : null,
         side: borderColor != null || borderWidth != null
             ? WidgetStateProperty.all(
                 BorderSide(
@@ -160,7 +179,9 @@ class AppButton extends StatelessWidget {
   Widget _buildText(BuildContext context, ThemeData theme) {
     return TextButton(
       style: theme.textButtonTheme.style?.copyWith(
-        foregroundColor: foregroundColor != null ? WidgetStateProperty.all(foregroundColor) : null,
+        foregroundColor: foregroundColor != null
+            ? WidgetStateProperty.all(foregroundColor)
+            : null,
       ),
       onPressed: _isDisabled ? null : onPressed,
       onLongPress: _isDisabled ? null : onLongPress,
@@ -188,7 +209,12 @@ class AppButton extends StatelessWidget {
     }
 
     if (icon == null) {
-      return Text(text!, overflow: TextOverflow.ellipsis, maxLines: 1, style: textStyle);
+      return Text(
+        text!,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        style: textStyle,
+      );
     }
 
     return Row(
@@ -198,7 +224,12 @@ class AppButton extends StatelessWidget {
         ?icon,
         if (text != null) ...<Widget>[
           SizedBox(width: 8.w),
-          Text(text!, overflow: TextOverflow.ellipsis, maxLines: 1, style: textStyle),
+          Text(
+            text!,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: textStyle,
+          ),
         ],
       ],
     );

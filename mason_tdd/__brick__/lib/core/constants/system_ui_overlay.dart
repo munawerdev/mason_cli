@@ -50,7 +50,10 @@ class AppSystemUI {
   ///
   /// [brightness] - The current theme brightness
   /// [customStyle] - Optional custom style to override defaults
-  static void apply({Brightness brightness = Brightness.light, SystemUiOverlayStyle? customStyle}) {
+  static void apply({
+    Brightness brightness = Brightness.light,
+    SystemUiOverlayStyle? customStyle,
+  }) {
     final SystemUiOverlayStyle style =
         customStyle ?? (brightness == Brightness.dark ? dark : light);
 

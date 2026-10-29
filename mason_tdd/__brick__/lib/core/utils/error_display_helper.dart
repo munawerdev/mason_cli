@@ -6,7 +6,10 @@ import '/domain/failures/network/network_failure.dart';
 /// Helper class for displaying errors in UI with type-specific styling
 class ErrorDisplayHelper {
   /// Gets error-specific UI properties
-  static ErrorDisplayProperties getDisplayProperties(BuildContext context, NetworkFailure failure) {
+  static ErrorDisplayProperties getDisplayProperties(
+    BuildContext context,
+    NetworkFailure failure,
+  ) {
     switch (failure.type) {
       case NetworkFailureType.noInternetConnection:
         return ErrorDisplayProperties(
@@ -91,7 +94,11 @@ class ErrorDisplayHelper {
 
 /// Properties for error display
 class ErrorDisplayProperties {
-  const ErrorDisplayProperties({required this.icon, required this.title, required this.color});
+  const ErrorDisplayProperties({
+    required this.icon,
+    required this.title,
+    required this.color,
+  });
   final IconData icon;
   final String title;
   final Color color;

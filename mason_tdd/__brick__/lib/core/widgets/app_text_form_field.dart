@@ -24,7 +24,16 @@ class AppTextFieldConfig {
 }
 
 /// Enum for different text field variants
-enum AppTextFieldType { standard, email, password, phone, number, multiline, search, url }
+enum AppTextFieldType {
+  standard,
+  email,
+  password,
+  phone,
+  number,
+  multiline,
+  search,
+  url,
+}
 
 /// Main AppTextFormField widget with improved architecture
 class AppTextFormField extends StatefulWidget {
@@ -119,7 +128,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   @override
   void initState() {
     super.initState();
-    _obscureText = widget.obscureText || widget.type == AppTextFieldType.password;
+    _obscureText =
+        widget.obscureText || widget.type == AppTextFieldType.password;
   }
 
   @override
@@ -148,7 +158,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onFieldSubmitted,
       onEditingComplete: widget.onEditingComplete,
-      style: widget.config?.textStyle ?? inputTheme.labelStyle ?? theme.textTheme.bodyLarge,
+      style:
+          widget.config?.textStyle ??
+          inputTheme.labelStyle ??
+          theme.textTheme.bodyLarge,
       decoration: _buildInputDecoration(context),
     );
   }
@@ -158,9 +171,12 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     final InputDecorationThemeData inputTheme = theme.inputDecorationTheme;
 
     // Get border from theme for overrides
-    final OutlineInputBorder? baseBorder = inputTheme.border as OutlineInputBorder?;
-    final OutlineInputBorder? enabledBorder = inputTheme.enabledBorder as OutlineInputBorder?;
-    final OutlineInputBorder? focusedBorder = inputTheme.focusedBorder as OutlineInputBorder?;
+    final OutlineInputBorder? baseBorder =
+        inputTheme.border as OutlineInputBorder?;
+    final OutlineInputBorder? enabledBorder =
+        inputTheme.enabledBorder as OutlineInputBorder?;
+    final OutlineInputBorder? focusedBorder =
+        inputTheme.focusedBorder as OutlineInputBorder?;
 
     // Apply overrides if provided
     final Color? borderColor = widget.borderColor ?? widget.config?.borderColor;
@@ -178,14 +194,17 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       isDense: inputTheme.isDense,
       filled: inputTheme.filled,
       fillColor: fillColor ?? inputTheme.fillColor,
-      contentPadding: widget.config?.contentPadding ?? inputTheme.contentPadding,
+      contentPadding:
+          widget.config?.contentPadding ?? inputTheme.contentPadding,
       floatingLabelBehavior: inputTheme.floatingLabelBehavior,
       alignLabelWithHint: inputTheme.alignLabelWithHint,
       labelStyle: widget.config?.labelStyle ?? inputTheme.labelStyle,
       hintStyle: widget.config?.hintStyle ?? inputTheme.hintStyle,
       errorStyle: inputTheme.errorStyle,
       border: borderColor != null && baseBorder != null
-          ? baseBorder.copyWith(borderSide: baseBorder.borderSide.copyWith(color: borderColor))
+          ? baseBorder.copyWith(
+              borderSide: baseBorder.borderSide.copyWith(color: borderColor),
+            )
           : inputTheme.border,
       enabledBorder: borderColor != null && enabledBorder != null
           ? enabledBorder.copyWith(
@@ -194,7 +213,9 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
           : inputTheme.enabledBorder,
       focusedBorder: focusedBorderColor != null && focusedBorder != null
           ? focusedBorder.copyWith(
-              borderSide: focusedBorder.borderSide.copyWith(color: focusedBorderColor),
+              borderSide: focusedBorder.borderSide.copyWith(
+                color: focusedBorderColor,
+              ),
             )
           : inputTheme.focusedBorder,
       errorBorder: inputTheme.errorBorder,
@@ -286,7 +307,9 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       case AppTextFieldType.phone:
         return <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly];
       case AppTextFieldType.number:
-        return <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))];
+        return <TextInputFormatter>[
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+        ];
       default:
         return null;
     }
@@ -317,7 +340,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
   }
 
   bool _isValidUrl(String url) {
-    return RegExp(r'^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$')
-        .hasMatch(url);
+    return RegExp(
+      r'^https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$',
+    ).hasMatch(url);
   }
 }

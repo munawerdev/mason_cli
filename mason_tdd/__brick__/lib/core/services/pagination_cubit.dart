@@ -55,7 +55,12 @@ mixin PaginationMixin<S> on Cubit<S> {
     // Typed callbacks resolve dynamic property access.
     required TData Function(S state) getCurrentData,
     required bool Function(S state) getIsLoadingMore,
-    required S Function(S state, {bool? isLoadingMore, ApiResponse<TData>? response}) copyWithState,
+    required S Function(
+      S state, {
+      bool? isLoadingMore,
+      ApiResponse<TData>? response,
+    })
+    copyWithState,
 
     int limit = 10,
   }) async {
@@ -65,7 +70,8 @@ mixin PaginationMixin<S> on Cubit<S> {
     final bool isLoadingMore = getIsLoadingMore(currentState);
 
     // Early return if loading or no more data
-    if (isLoadingMore || getCurrentCount(currentData) >= getTotalCount(currentData)) {
+    if (isLoadingMore ||
+        getCurrentCount(currentData) >= getTotalCount(currentData)) {
       return;
     }
 
@@ -73,7 +79,10 @@ mixin PaginationMixin<S> on Cubit<S> {
     emit(copyWithState(currentState, isLoadingMore: true));
 
     try {
-      final ApiResponse<TData> response = await fetchData(getCurrentCount(currentData), limit);
+      final ApiResponse<TData> response = await fetchData(
+        getCurrentCount(currentData),
+        limit,
+      );
 
       if (response.status == Status.completed) {
         final TData mergedData = mergeData(currentData, response.data);

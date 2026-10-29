@@ -307,8 +307,8 @@ import 'features/${originalName.snakeCase}/${originalName.snakeCase}_initial_par
     const filePath = 'lib/config/navigation/app_routes.dart';
     File file = File(filePath);
     if (!file.existsSync()) {
-      context.logger.warn(
-          '⚠️  $filePath not found. Skipping AppRoutes registration.');
+      context.logger
+          .warn('⚠️  $filePath not found. Skipping AppRoutes registration.');
       return;
     }
 
@@ -336,8 +336,8 @@ import 'features/${originalName.snakeCase}/${originalName.snakeCase}_initial_par
     const filePath = 'lib/config/navigation/app_router.dart';
     File file = File(filePath);
     if (!file.existsSync()) {
-      context.logger.warn(
-          '⚠️  $filePath not found. Skipping GoRouter registration.');
+      context.logger
+          .warn('⚠️  $filePath not found. Skipping GoRouter registration.');
       return;
     }
 
@@ -348,7 +348,8 @@ import 'features/${originalName.snakeCase}/${originalName.snakeCase}_initial_par
 
     addImportToFile(
         "import '/features/$folder/${folder}_initial_params.dart';", filePath);
-    addImportToFile("import '/features/$folder/${folder}_page.dart';", filePath);
+    addImportToFile(
+        "import '/features/$folder/${folder}_page.dart';", filePath);
 
     final fileContent = file.readAsStringSync();
 
