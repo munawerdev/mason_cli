@@ -142,7 +142,7 @@ class DioNetworkRepository implements NetworkBaseApiService {
     try {
       final FormData formData = FormData.fromMap(<String, dynamic>{
         'file': await MultipartFile.fromFile(filePath, filename: fileName),
-        if (data != null) ...data,
+        ...?data,
       });
 
       return await _executeRequest<T>(
