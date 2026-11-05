@@ -33,10 +33,9 @@ return Scaffold(
   {{#isGet}}
       body: RefreshIndicator.adaptive(
         onRefresh: cubit.{{folder_name_camelCase}},
-        child: BlocBuilder(
+        child: BlocBuilder<{{class_name}}Cubit,{{class_name}}State>(
           bloc: cubit,
           builder: (context, state) {
-            state as {{class_name}}State;
             return state.response.toWidget(
                 onCompleted: (context, data) => const SizedBox()
                 {{#isGet}}
